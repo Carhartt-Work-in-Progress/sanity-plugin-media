@@ -9445,7 +9445,7 @@ const AutocompleteWithPayload = Autocomplete;
 const search = async searchTerm => {
   var _a;
   const baseUrl = (_a = process == null ? void 0 : process.env) == null ? void 0 : _a.SANITY_STUDIO_PROVIDER_BASEURL;
-  const urlToUse = baseUrl ? "".concat(baseUrl, "/sanity/products?search=").concat(searchTerm) : "https://sanity-ct-products-provider.fly.dev/sanity/products?search=".concat(searchTerm);
+  const urlToUse = baseUrl ? "".concat(baseUrl, "/commercetools/products?search=").concat(searchTerm) : "https://sanity-ct-products-provider.fly.dev/commercetools/products?search=".concat(searchTerm);
   const response = await fetch(urlToUse);
   return response.json();
 };
