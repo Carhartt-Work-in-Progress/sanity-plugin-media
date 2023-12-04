@@ -1,9 +1,9 @@
-import {SchemaIcon} from '@sanity/icons'
 import {CURRENT_SEASON_DOCUMENT_NAME} from '../constants'
+import TagIcon from '../components/TagIcon'
 
 export default {
   title: 'Current Season',
-  icon: SchemaIcon,
+  icon: TagIcon,
   name: CURRENT_SEASON_DOCUMENT_NAME,
   type: 'document',
   fields: [
@@ -22,15 +22,18 @@ export default {
     }
   ],
   preview: {
-    // select: {
-    //   name: 'name'
-    // },
-    // prepare(selection: any) {
-    //   const {name} = selection
-    //   return {
-    //     media: TagIcon,
-    //     title: name?.current
-    //   }
-    // }
+    select: {
+      name: 'currentSeasonSelector.name'
+    },
+
+    prepare(selection: any) {
+      const {name} = selection
+
+      return {
+        media: TagIcon,
+        title: 'Current Season',
+        subtitle: name
+      }
+    }
   }
 }

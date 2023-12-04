@@ -14748,7 +14748,7 @@ var mediaSeason = {
 };
 var mediaCurrentSeason = {
   title: "Current Season",
-  icon: SchemaIcon,
+  icon: TagIcon,
   name: CURRENT_SEASON_DOCUMENT_NAME,
   type: "document",
   fields: [{
@@ -14765,16 +14765,19 @@ var mediaCurrentSeason = {
     }]
   }],
   preview: {
-    // select: {
-    //   name: 'name'
-    // },
-    // prepare(selection: any) {
-    //   const {name} = selection
-    //   return {
-    //     media: TagIcon,
-    //     title: name?.current
-    //   }
-    // }
+    select: {
+      name: "currentSeasonSelector.name"
+    },
+    prepare(selection) {
+      const {
+        name
+      } = selection;
+      return {
+        media: TagIcon,
+        title: "Current Season",
+        subtitle: name
+      };
+    }
   }
 };
 var mediaCollaboration = {
