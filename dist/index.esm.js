@@ -4262,7 +4262,7 @@ const TAG_DOCUMENT_NAME = "media.tag";
 const TAGS_PANEL_WIDTH = 250;
 const SEASONS_DOCUMENT_NAME = "seasons";
 const COLLABORATION_DOCUMENT_NAME = "collaborations";
-const CURRENT_SEASON_DOCUMENT_NAME = "collaborations";
+const CURRENT_SEASON_DOCUMENT_NAME = "currentseason";
 const AssetSourceDispatchContext = createContext(void 0);
 const AssetBrowserDispatchProvider = props => {
   const {
