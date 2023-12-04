@@ -402,8 +402,8 @@ const DialogAssetEdit = (props: Props) => {
                         />
 
                         <CurrentSeasonToggle
-                          description={'Is this image valid for the current season?'}
                           error={errors.isCurrentSeason?.message?.toString()}
+                          disabled={!currentValues.season}
                           label="Current Season Image"
                           name={'isCurrentSeason'}
                           isCurrentSeason={currentValues.isCurrentSeason}

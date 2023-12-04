@@ -295,6 +295,7 @@ const DialogMassAssetEdit = (props: Props) => {
                     name={'isCurrentSeason'}
                     isCurrentSeason={currentValues.isCurrentSeason}
                     onChange={value => setValue('isCurrentSeason', value, {shouldDirty: true})}
+                    disabled={!currentValues.season}
                   />
 
                   {/* name */}

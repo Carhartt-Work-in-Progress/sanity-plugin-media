@@ -9690,15 +9690,9 @@ const Togggle = props => {
     setSelected(prev => !prev);
     onChange(!selected);
   };
-  return /* @__PURE__ */jsx(Card, {
-    padding: 4,
-    style: {
-      textAlign: "center"
-    },
-    children: /* @__PURE__ */jsx(Switch, {
-      checked: disabled ? false : selected,
-      onClick: handleClick
-    })
+  return /* @__PURE__ */jsx(Switch, {
+    checked: disabled ? false : selected,
+    onClick: handleClick
   });
 };
 const CurrentSeasonToggle = props => {
@@ -9711,11 +9705,8 @@ const CurrentSeasonToggle = props => {
     isCurrentSeason,
     onChange
   } = props;
-  return /* @__PURE__ */jsxs(Card, {
-    padding: 4,
-    style: {
-      textAlign: "center"
-    },
+  return /* @__PURE__ */jsxs(Box, {
+    padding: [4, 0],
     children: [/* @__PURE__ */jsx(FormFieldInputLabel, {
       description,
       error,
@@ -10041,8 +10032,8 @@ const DialogAssetEdit = props => {
                       placeholder: "Select or create...",
                       value: (_g = currentValues == null ? void 0 : currentValues.season) != null ? _g : null
                     }), /* @__PURE__ */jsx(CurrentSeasonToggle, {
-                      description: "Is this image valid for the current season?",
                       error: (_i = (_h = errors.isCurrentSeason) == null ? void 0 : _h.message) == null ? void 0 : _i.toString(),
+                      disabled: !currentValues.season,
                       label: "Current Season Image",
                       name: "isCurrentSeason",
                       isCurrentSeason: currentValues.isCurrentSeason,
@@ -11085,7 +11076,8 @@ const DialogMassAssetEdit = props => {
                   isCurrentSeason: currentValues.isCurrentSeason,
                   onChange: value => setValue("isCurrentSeason", value, {
                     shouldDirty: true
-                  })
+                  }),
+                  disabled: !currentValues.season
                 }), /* @__PURE__ */jsx(FormFieldInputCollaborations, {
                   control,
                   disabled: formUpdating,

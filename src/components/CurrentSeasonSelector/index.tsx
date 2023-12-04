@@ -1,5 +1,5 @@
-import {Card} from '@sanity/ui'
 import React from 'react'
+import {Box} from '@sanity/ui'
 import FormFieldInputLabel from '../FormFieldInputLabel'
 import Togggle from '../Toggle'
 
@@ -18,7 +18,7 @@ const CurrentSeasonToggle = (props: Props) => {
   const {description, disabled, label, name, error, isCurrentSeason, onChange} = props
 
   return (
-    <Card padding={4} style={{textAlign: 'center'}}>
+    <Box padding={[4, 0]}>
       <FormFieldInputLabel description={description} error={error} label={label} name={name} />
 
       <Togggle
@@ -26,7 +26,7 @@ const CurrentSeasonToggle = (props: Props) => {
         disabled={disabled}
         onChange={value => onChange(value)}
       />
-    </Card>
+    </Box>
   )
 }
 

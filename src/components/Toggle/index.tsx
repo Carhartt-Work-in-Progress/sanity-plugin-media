@@ -1,4 +1,4 @@
-import {Card, Switch} from '@sanity/ui'
+import {Switch} from '@sanity/ui'
 import React, {useState} from 'react'
 
 const Togggle = (props: {
@@ -19,11 +19,7 @@ const Togggle = (props: {
     onChange(!selected)
   }
 
-  return (
-    <Card padding={4} style={{textAlign: 'center'}}>
-      <Switch checked={disabled ? false : selected} onClick={handleClick} />
-    </Card>
-  )
+  return <Switch checked={disabled ? false : selected} onClick={handleClick} />
 }
 
 export default Togggle
