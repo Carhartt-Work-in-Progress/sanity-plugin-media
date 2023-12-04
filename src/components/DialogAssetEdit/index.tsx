@@ -403,7 +403,7 @@ const DialogAssetEdit = (props: Props) => {
 
                         <CurrentSeasonToggle
                           error={errors.isCurrentSeason?.message?.toString()}
-                          disabled={!currentValues.season}
+                          disabled
                           label="Current Season?"
                           name={'isCurrentSeason'}
                           isCurrentSeason={currentValues.isCurrentSeason}

@@ -10034,7 +10034,7 @@ const DialogAssetEdit = props => {
                       value: (_g = currentValues == null ? void 0 : currentValues.season) != null ? _g : null
                     }), /* @__PURE__ */jsx(CurrentSeasonToggle, {
                       error: (_i = (_h = errors.isCurrentSeason) == null ? void 0 : _h.message) == null ? void 0 : _i.toString(),
-                      disabled: !currentValues.season,
+                      disabled: true,
                       label: "Current Season?",
                       name: "isCurrentSeason",
                       isCurrentSeason: currentValues.isCurrentSeason,
@@ -14724,6 +14724,11 @@ var mediaSeason = {
     title: "Name",
     name: "name",
     type: "slug"
+  }, {
+    title: "Current Season",
+    type: "boolean",
+    name: "isCurrentSeason",
+    description: "Set to true to set this as current season"
   }],
   preview: {
     select: {
