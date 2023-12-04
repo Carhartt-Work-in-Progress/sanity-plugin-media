@@ -297,7 +297,7 @@ const DialogAssetEdit = (props: Props) => {
   if (!currentAsset) {
     return null
   }
-  console.log(currentAsset.season, 'THE VALID SEASON', currentValues.season)
+
   return (
     <Dialog footer={<Footer />} header="Asset details" id={id} onClose={handleClose} width={3}>
       {/*
@@ -404,7 +404,7 @@ const DialogAssetEdit = (props: Props) => {
                         <CurrentSeasonToggle
                           error={errors.isCurrentSeason?.message?.toString()}
                           disabled={!currentValues.season}
-                          label="Current Season Image"
+                          label="Current Season?"
                           name={'isCurrentSeason'}
                           isCurrentSeason={currentValues.isCurrentSeason}
                           onChange={value =>

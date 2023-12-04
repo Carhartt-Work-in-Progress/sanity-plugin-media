@@ -9929,7 +9929,6 @@ const DialogAssetEdit = props => {
   if (!currentAsset) {
     return null;
   }
-  console.log(currentAsset.season, "THE VALID SEASON", currentValues.season);
   return /* @__PURE__ */jsxs(Dialog, {
     footer: /* @__PURE__ */jsx(Footer, {}),
     header: "Asset details",
@@ -10036,7 +10035,7 @@ const DialogAssetEdit = props => {
                     }), /* @__PURE__ */jsx(CurrentSeasonToggle, {
                       error: (_i = (_h = errors.isCurrentSeason) == null ? void 0 : _h.message) == null ? void 0 : _i.toString(),
                       disabled: !currentValues.season,
-                      label: "Current Season Image",
+                      label: "Current Season?",
                       name: "isCurrentSeason",
                       isCurrentSeason: currentValues.isCurrentSeason,
                       onChange: value => setValue("isCurrentSeason", value, {
