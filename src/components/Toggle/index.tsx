@@ -19,7 +19,7 @@ const Togggle = (props: {
     onChange(!selected)
   }
 
-  return <Switch checked={disabled ? false : selected} onClick={handleClick} />
+  return <Switch disabled={disabled} checked={disabled ? false : selected} onChange={handleClick} />
 }
 
 export default Togggle

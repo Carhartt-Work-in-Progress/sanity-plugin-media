@@ -9691,8 +9691,9 @@ const Togggle = props => {
     onChange(!selected);
   };
   return /* @__PURE__ */jsx(Switch, {
+    disabled,
     checked: disabled ? false : selected,
-    onClick: handleClick
+    onChange: handleClick
   });
 };
 const CurrentSeasonToggle = props => {
