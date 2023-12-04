@@ -9929,6 +9929,7 @@ const DialogAssetEdit = props => {
   if (!currentAsset) {
     return null;
   }
+  console.log(currentAsset.season, "THE VALID SEASON", currentValues.season);
   return /* @__PURE__ */jsxs(Dialog, {
     footer: /* @__PURE__ */jsx(Footer, {}),
     header: "Asset details",
