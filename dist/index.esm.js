@@ -28,6 +28,7 @@ import CreatableSelect from 'react-select/creatable';
 import { useDebounce } from 'usehooks-ts';
 import formatRelative from 'date-fns/formatRelative';
 import { useDropzone } from 'react-dropzone';
+import { deskTool } from 'sanity/desk';
 const AccessDeniedIcon = forwardRef(function AccessDeniedIcon2(props, ref) {
   return /* @__PURE__ */jsx("svg", {
     "data-sanity-icon": "access-denied",
@@ -14818,6 +14819,7 @@ const tool = {
   ...plugin,
   component: Tool
 };
+const singletonTypes = /* @__PURE__ */new Set(["currentSeasonSelector"]);
 const media = definePlugin({
   name: "media",
   form: {
@@ -14837,7 +14839,11 @@ const media = definePlugin({
   },
   tools: prev => {
     return [...prev, tool];
-  }
+  },
+  plugins: [deskTool({
+    structure: S => S.list().title("Structure").items([...S.documentTypeListItems().filter(item => !singletonTypes.has(item.getId())), S.divider(), singletonListItem(S, "currentSeasonSelector", "Select Current Season")])
+  })]
 });
+const singletonListItem = (S, typeName, title) => S.listItem().title(title || typeName).id(typeName).child(S.document().schemaType(typeName).documentId(typeName));
 export { media, mediaAssetSource };
 //# sourceMappingURL=index.esm.js.map
