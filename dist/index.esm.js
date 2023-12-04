@@ -8433,6 +8433,7 @@ const assetFormSchema = z.object({
     label: z.string().trim(),
     value: z.string().trim()
   }).nullable(),
+  isCurrentSeason: z.boolean(),
   collaboration: z.object({
     label: z.string().trim(),
     value: z.string().trim()
@@ -9675,6 +9676,58 @@ const getSeasonCollaborationOptions = tags => {
     return acc;
   }, []);
 };
+const Togggle = props => {
+  const {
+    initialState = false,
+    onChange,
+    disabled
+  } = props;
+  const [selected, setSelected] = useState(initialState);
+  const handleClick = () => {
+    if (disabled) {
+      return;
+    }
+    setSelected(prev => !prev);
+    onChange(!selected);
+  };
+  return /* @__PURE__ */jsx(Card, {
+    padding: 4,
+    style: {
+      textAlign: "center"
+    },
+    children: /* @__PURE__ */jsx(Switch, {
+      checked: disabled ? false : selected,
+      onClick: handleClick
+    })
+  });
+};
+const CurrentSeasonToggle = props => {
+  const {
+    description,
+    disabled,
+    label,
+    name,
+    error,
+    isCurrentSeason,
+    onChange
+  } = props;
+  return /* @__PURE__ */jsxs(Card, {
+    padding: 4,
+    style: {
+      textAlign: "center"
+    },
+    children: [/* @__PURE__ */jsx(FormFieldInputLabel, {
+      description,
+      error,
+      label,
+      name
+    }), /* @__PURE__ */jsx(Togggle, {
+      initialState: isCurrentSeason,
+      disabled,
+      onChange: value => onChange(value)
+    })]
+  });
+};
 var __freeze$e = Object.freeze;
 var __defProp$f = Object.defineProperty;
 var __template$e = (cooked, raw) => __freeze$e(__defProp$f(cooked, "raw", {
@@ -9718,6 +9771,7 @@ const DialogAssetEdit = props => {
       primaryProducts: (asset == null ? void 0 : asset.primaryProducts) || (asset == null ? void 0 : asset.products) || [],
       secondaryProducts: (asset == null ? void 0 : asset.secondaryProducts) || (asset == null ? void 0 : asset.products) || [],
       season: initialSeason || null,
+      isCurrentSeason: (asset == null ? void 0 : asset.isCurrentSeason) || false,
       collaboration: initialCollaboration || null,
       altText: (asset == null ? void 0 : asset.altText) || "",
       description: (asset == null ? void 0 : asset.description) || "",
@@ -9903,7 +9957,7 @@ const DialogAssetEdit = props => {
               isLoading,
               referringDocuments
             } = _ref80;
-            var _a3, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p;
+            var _a3, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r;
             const uniqueReferringDocuments = getUniqueDocuments(referringDocuments);
             return /* @__PURE__ */jsxs(Fragment, {
               children: [/* @__PURE__ */jsxs(TabList, {
@@ -9986,24 +10040,33 @@ const DialogAssetEdit = props => {
                       options: allSeasonOptions,
                       placeholder: "Select or create...",
                       value: (_g = currentValues == null ? void 0 : currentValues.season) != null ? _g : null
+                    }), /* @__PURE__ */jsx(CurrentSeasonToggle, {
+                      description: "Is this image valid for the current season?",
+                      error: (_i = (_h = errors.isCurrentSeason) == null ? void 0 : _h.message) == null ? void 0 : _i.toString(),
+                      label: "Current Season Image",
+                      name: "isCurrentSeason",
+                      isCurrentSeason: currentValues.isCurrentSeason,
+                      onChange: value => setValue("isCurrentSeason", value, {
+                        shouldDirty: true
+                      })
                     }), /* @__PURE__ */jsx(FormFieldInputCollaborations, {
                       control,
                       disabled: formUpdating,
-                      error: (_h = errors == null ? void 0 : errors.season) == null ? void 0 : _h.message,
+                      error: (_j = errors == null ? void 0 : errors.season) == null ? void 0 : _j.message,
                       label: "Drops",
                       name: "collaboration",
                       onCreateSeason: handleCreateCollaboration,
                       options: allCollaborationOptions,
                       placeholder: "Select or create...",
-                      value: (_i = currentValues == null ? void 0 : currentValues.collaboration) != null ? _i : null
+                      value: (_k = currentValues == null ? void 0 : currentValues.collaboration) != null ? _k : null
                     }), /* @__PURE__ */jsx(ProductSelector, {
                       onChange: updatedValue => {
                         setValue("primaryProducts", updatedValue, {
                           shouldDirty: true
                         });
                       },
-                      error: (_k = (_j = errors.products) == null ? void 0 : _j.message) == null ? void 0 : _k.toString(),
-                      value: (_l = currentValues == null ? void 0 : currentValues.primaryProducts) != null ? _l : [],
+                      error: (_m = (_l = errors.products) == null ? void 0 : _l.message) == null ? void 0 : _m.toString(),
+                      value: (_n = currentValues == null ? void 0 : currentValues.primaryProducts) != null ? _n : [],
                       labelDescription: "Add products to image",
                       label: "Primary Products",
                       name: "primaryProducts"
@@ -10013,15 +10076,15 @@ const DialogAssetEdit = props => {
                           shouldDirty: true
                         });
                       },
-                      error: (_n = (_m = errors.products) == null ? void 0 : _m.message) == null ? void 0 : _n.toString(),
-                      value: (_o = currentValues == null ? void 0 : currentValues.secondaryProducts) != null ? _o : [],
+                      error: (_p = (_o = errors.products) == null ? void 0 : _o.message) == null ? void 0 : _p.toString(),
+                      value: (_q = currentValues == null ? void 0 : currentValues.secondaryProducts) != null ? _q : [],
                       labelDescription: "Add products to image",
                       label: "Secondary Products",
                       name: "secondaryProducts"
                     }), /* @__PURE__ */jsx(FormFieldInputText, {
                       ...register("altText"),
                       disabled: formUpdating,
-                      error: (_p = errors == null ? void 0 : errors.altText) == null ? void 0 : _p.message,
+                      error: (_r = errors == null ? void 0 : errors.altText) == null ? void 0 : _r.message,
                       label: "Alt Text",
                       name: "altText",
                       value: currentAsset == null ? void 0 : currentAsset.altText
@@ -10793,7 +10856,7 @@ const DialogTags = props => {
   });
 };
 const DialogMassAssetEdit = props => {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n;
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p;
   const {
     children,
     dialog: {
@@ -10816,6 +10879,7 @@ const DialogMassAssetEdit = props => {
     primaryProducts: [],
     secondaryProducts: [],
     season: null,
+    isCurrentSeason: false,
     collaboration: null,
     altText: "",
     description: "",
@@ -11013,24 +11077,33 @@ const DialogMassAssetEdit = props => {
                   options: allSeasonOptions,
                   placeholder: "Select or create...",
                   value: (_g = currentValues == null ? void 0 : currentValues.season) != null ? _g : null
+                }), /* @__PURE__ */jsx(CurrentSeasonToggle, {
+                  description: "Is this image valid for the current season?",
+                  error: (_i = (_h = errors.isCurrentSeason) == null ? void 0 : _h.message) == null ? void 0 : _i.toString(),
+                  label: "Current Season Image",
+                  name: "isCurrentSeason",
+                  isCurrentSeason: currentValues.isCurrentSeason,
+                  onChange: value => setValue("isCurrentSeason", value, {
+                    shouldDirty: true
+                  })
                 }), /* @__PURE__ */jsx(FormFieldInputCollaborations, {
                   control,
                   disabled: formUpdating,
-                  error: (_h = errors == null ? void 0 : errors.season) == null ? void 0 : _h.message,
+                  error: (_j = errors == null ? void 0 : errors.season) == null ? void 0 : _j.message,
                   label: "Drops",
                   name: "collaboration",
                   onCreateSeason: handleCreateCollaboration,
                   options: allCollaborationOptions,
                   placeholder: "Select or create...",
-                  value: (_i = currentValues == null ? void 0 : currentValues.collaboration) != null ? _i : null
+                  value: (_k = currentValues == null ? void 0 : currentValues.collaboration) != null ? _k : null
                 }), /* @__PURE__ */jsx(ProductSelector, {
                   onChange: updatedValue => {
                     setValue("primaryProducts", updatedValue, {
                       shouldDirty: true
                     });
                   },
-                  error: (_j = errors.products) == null ? void 0 : _j.message,
-                  value: (_k = currentValues == null ? void 0 : currentValues.products) != null ? _k : [],
+                  error: (_l = errors.products) == null ? void 0 : _l.message,
+                  value: (_m = currentValues == null ? void 0 : currentValues.products) != null ? _m : [],
                   labelDescription: "Add products to image",
                   label: "Primary Products",
                   name: "primaryProducts"
@@ -11040,15 +11113,15 @@ const DialogMassAssetEdit = props => {
                       shouldDirty: true
                     });
                   },
-                  error: (_l = errors.products) == null ? void 0 : _l.message,
-                  value: (_m = currentValues == null ? void 0 : currentValues.products) != null ? _m : [],
+                  error: (_n = errors.products) == null ? void 0 : _n.message,
+                  value: (_o = currentValues == null ? void 0 : currentValues.products) != null ? _o : [],
                   labelDescription: "Add products to image",
                   label: "Secondary Products",
                   name: "secondaryProducts"
                 }), /* @__PURE__ */jsx(FormFieldInputText, {
                   ...register("altText"),
                   disabled: formUpdating,
-                  error: (_n = errors == null ? void 0 : errors.altText) == null ? void 0 : _n.message,
+                  error: (_p = errors == null ? void 0 : errors.altText) == null ? void 0 : _p.message,
                   label: "Alt Text",
                   name: "altText",
                   value: currentValues == null ? void 0 : currentValues.altText
