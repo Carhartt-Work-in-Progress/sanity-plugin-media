@@ -5,6 +5,7 @@ import FormBuilderTool from './components/FormBuilderTool'
 import Tool from './components/Tool'
 import mediaTag from './schemas/tag'
 import mediaSeason from './schemas/season'
+import mediaCurrentSeason from './schemas/currentSeason'
 import mediaCollaboration from './schemas/collaborations'
 
 const plugin = {
@@ -38,7 +39,7 @@ export const media = definePlugin({
     }
   },
   schema: {
-    types: [mediaTag, mediaSeason, mediaCollaboration]
+    types: [mediaTag, mediaSeason, mediaCurrentSeason, mediaCollaboration]
   },
   tools: prev => {
     return [...prev, tool]

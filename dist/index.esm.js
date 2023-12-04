@@ -4262,6 +4262,7 @@ const TAG_DOCUMENT_NAME = "media.tag";
 const TAGS_PANEL_WIDTH = 250;
 const SEASONS_DOCUMENT_NAME = "seasons";
 const COLLABORATION_DOCUMENT_NAME = "collaborations";
+const CURRENT_SEASON_DOCUMENT_NAME = "collaborations";
 const AssetSourceDispatchContext = createContext(void 0);
 const AssetBrowserDispatchProvider = props => {
   const {
@@ -14745,6 +14746,37 @@ var mediaSeason = {
     }
   }
 };
+var mediaCurrentSeason = {
+  title: "Current Season",
+  icon: SchemaIcon,
+  name: CURRENT_SEASON_DOCUMENT_NAME,
+  type: "document",
+  fields: [{
+    name: "currentSeasonSelector",
+    type: "object",
+    title: "Select Current Season",
+    fields: [{
+      title: "Season",
+      name: "seasons",
+      type: "reference",
+      to: [{
+        type: "seasons"
+      }]
+    }]
+  }],
+  preview: {
+    // select: {
+    //   name: 'name'
+    // },
+    // prepare(selection: any) {
+    //   const {name} = selection
+    //   return {
+    //     media: TagIcon,
+    //     title: name?.current
+    //   }
+    // }
+  }
+};
 var mediaCollaboration = {
   title: "Drops",
   icon: TagIcon,
@@ -14798,7 +14830,7 @@ const media = definePlugin({
     }
   },
   schema: {
-    types: [mediaTag, mediaSeason, mediaCollaboration]
+    types: [mediaTag, mediaSeason, mediaCurrentSeason, mediaCollaboration]
   },
   tools: prev => {
     return [...prev, tool];
