@@ -20,21 +20,5 @@ export default {
         }
       ]
     }
-  ],
-  preview: {
-    select: {
-      name: 'currentSeasonSelector'
-    },
-
-    prepare(selection: any) {
-      // const {name} = selection
-      console.warn('THE SELECTION', selection)
-
-      return {
-        media: TagIcon,
-        title: 'Current Season'
-        // subtitle: name
-      }
-    }
-  }
+  ]
 }

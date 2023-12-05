@@ -24,7 +24,6 @@ import getSeasonSelectOptions from '../../utils/getSeasonSelectOptions'
 import getSeasonCollaborationOptions from '../../utils/getCollaborationSelectOptions'
 import {collaborationActions, selectCollaborations} from '../../modules/collaborations'
 import FormFieldInputCollaborations from '../FormFieldInputCollaborations'
-import CurrentSeasonToggle from '../CurrentSeasonSelector'
 
 type Props = {
   children: ReactNode
@@ -56,7 +55,6 @@ const DialogMassAssetEdit = (props: Props) => {
     primaryProducts: [],
     secondaryProducts: [],
     season: null,
-    isCurrentSeason: false,
     collaboration: null,
     altText: '',
     description: '',
@@ -161,7 +159,7 @@ const DialogMassAssetEdit = (props: Props) => {
     },
     [dispatch]
   )
-
+  console.log(currentValues.season)
   // Update tags form field (react-select) when a new _inline_ tag has been created
   useEffect(() => {
     if (lastCreatedTag) {
@@ -286,16 +284,6 @@ const DialogMassAssetEdit = (props: Props) => {
                     options={allSeasonOptions}
                     placeholder="Select or create..."
                     value={currentValues?.season ?? null}
-                  />
-
-                  <CurrentSeasonToggle
-                    description={'Is this image valid for the current season?'}
-                    error={errors.isCurrentSeason?.message?.toString()}
-                    label="Current Season Image"
-                    name={'isCurrentSeason'}
-                    isCurrentSeason={currentValues.isCurrentSeason}
-                    onChange={value => setValue('isCurrentSeason', value, {shouldDirty: true})}
-                    disabled={!currentValues.season}
                   />
 
                   {/* name */}

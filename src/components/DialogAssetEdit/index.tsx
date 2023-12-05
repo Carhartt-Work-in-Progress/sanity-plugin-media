@@ -39,7 +39,6 @@ import {
   selectInitialSelectedCollaboration
 } from '../../modules/collaborations'
 import getSeasonCollaborationOptions from '../../utils/getCollaborationSelectOptions'
-import CurrentSeasonToggle from '../CurrentSeasonSelector'
 
 type Props = {
   children: ReactNode
@@ -84,7 +83,6 @@ const DialogAssetEdit = (props: Props) => {
         primaryProducts: asset?.primaryProducts || asset?.products || [],
         secondaryProducts: asset?.secondaryProducts || asset?.products || [],
         season: initialSeason || null,
-        isCurrentSeason: asset?.isCurrentSeason || false,
         collaboration: initialCollaboration || null,
         altText: asset?.altText || '',
         description: asset?.description || '',
@@ -298,6 +296,8 @@ const DialogAssetEdit = (props: Props) => {
     return null
   }
 
+  console.log(currentValues.season)
+
   return (
     <Dialog footer={<Footer />} header="Asset details" id={id} onClose={handleClose} width={3}>
       {/*
@@ -399,17 +399,6 @@ const DialogAssetEdit = (props: Props) => {
                           options={allSeasonOptions}
                           placeholder="Select or create..."
                           value={currentValues?.season ?? null}
-                        />
-
-                        <CurrentSeasonToggle
-                          error={errors.isCurrentSeason?.message?.toString()}
-                          disabled
-                          label="Current Season?"
-                          name={'isCurrentSeason'}
-                          isCurrentSeason={currentValues.isCurrentSeason}
-                          onChange={value =>
-                            setValue('isCurrentSeason', value, {shouldDirty: true})
-                          }
                         />
 
                         {/* name */}
