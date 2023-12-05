@@ -9764,6 +9764,7 @@ const DialogAssetEdit = props => {
   const tags = useTypedSelector(selectTags);
   const seasons = useTypedSelector(selectSeasons);
   const collaboration = useTypedSelector(selectCollaborations);
+  console.log(seasons, "THE SEASONS");
   const assetUpdatedPrev = useRef(void 0);
   const [assetSnapshot, setAssetSnapshot] = useState(assetItem == null ? void 0 : assetItem.asset);
   const [tabSection, setTabSection] = useState("details");

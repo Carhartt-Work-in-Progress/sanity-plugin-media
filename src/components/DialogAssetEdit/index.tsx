@@ -62,7 +62,7 @@ const DialogAssetEdit = (props: Props) => {
   const tags = useTypedSelector(selectTags)
   const seasons = useTypedSelector(selectSeasons)
   const collaboration = useTypedSelector(selectCollaborations)
-
+  console.log(seasons, 'THE SEASONS')
   const assetUpdatedPrev = useRef<string | undefined>(undefined)
 
   // Generate a snapshot of the current asset
