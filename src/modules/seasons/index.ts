@@ -2,7 +2,7 @@ import {createSelector, createSlice, PayloadAction} from '@reduxjs/toolkit'
 import {ClientError, SanityDocument, Transaction} from '@sanity/client'
 import {HttpError, MyEpic} from '@types'
 import debugThrottle from '../../operators/debugThrottle'
-import {SEASONS_DOCUMENT_NAME} from '../../constants'
+import {CURRENT_SEASON_DOCUMENT_NAME, SEASONS_DOCUMENT_NAME} from '../../constants'
 import {RootReducerState} from '../types'
 import groq from 'groq'
 import {checkSeasonName} from '../../operators/checkTagName'
@@ -25,6 +25,13 @@ export type Season = SanityDocument & {
   name: {
     _type: 'slug'
     current: string
+    isCurrentSeason: boolean
+  }
+}
+
+export type CurrentSeason = SanityDocument & {
+  currentSeasonSelector: {
+    seasons: Season
   }
 }
 
@@ -63,7 +70,10 @@ const seasonsSlice = createSlice({
         _type: 'seasonItem',
         error: undefined,
         picked: false,
-        season,
+        season: {
+          ...season,
+          isCurrentSeason: false
+        },
         updating: false
       }
     },
@@ -96,6 +106,17 @@ const seasonsSlice = createSlice({
               _type,
               name
             } | order(name.current asc),
+
+            "currentSeason": *[
+              _type == "${CURRENT_SEASON_DOCUMENT_NAME}"
+            ] {
+              _id,
+              _type,
+              name,
+              currentSeasonSelector{
+                seasons->
+              }
+            }
           }
         `
         return {payload: {query}}
@@ -105,13 +126,17 @@ const seasonsSlice = createSlice({
     fetchComplete(state, action) {
       state.fetching = false
       state.fetchingError = undefined
-      const seasons = action.payload.seasons
+
+      const {seasons, currentSeaon} = action.payload
       state.byIds = action.payload.seasons.reduce((acc: Season, season: Season) => {
         acc[season._id] = {
           _type: 'seasonItem',
           error: undefined,
           picked: false,
-          season,
+          season: {
+            ...season,
+            isCurrentSeason: currentSeaon._id === season._id
+          },
           updating: false
         }
         return acc
@@ -122,7 +147,10 @@ const seasonsSlice = createSlice({
         state.byIds[season._id] = {
           _type: 'seasonItem',
           picked: false,
-          season,
+          season: {
+            ...season,
+            isCurrentSeason: currentSeaon._id === season._id
+          },
           updating: false
         }
       })
@@ -224,12 +252,18 @@ export const seasonsFetchEpic: MyEpic = (action$, state$, {client}) => {
         mergeMap(() =>
           client.observable.fetch<{
             items: Season[]
+            currentSeason: CurrentSeason[]
           }>(query)
         ),
         // Dispatch complete action
         mergeMap(result => {
-          const {items} = result
-          return of(seasonsSlice.actions.fetchComplete({seasons: items}))
+          const {items, currentSeason} = result
+          return of(
+            seasonsSlice.actions.fetchComplete({
+              seasons: items,
+              currentSeaon: currentSeason[0].currentSeasonSelector.seasons
+            })
+          )
         }),
         catchError((error: ClientError) =>
           of(
@@ -260,7 +294,8 @@ export const seasonsCreateEpic: MyEpic = (action$, state$, {client}) =>
             _type: SEASONS_DOCUMENT_NAME,
             name: {
               _type: 'slug',
-              current: name
+              current: name,
+              isCurrentSeason: false
             }
           })
         ),

@@ -5831,7 +5831,10 @@ const seasonsSlice = createSlice({
         _type: "seasonItem",
         error: void 0,
         picked: false,
-        season,
+        season: {
+          ...season,
+          isCurrentSeason: false
+        },
         updating: false
       };
     },
@@ -5848,7 +5851,7 @@ const seasonsSlice = createSlice({
         delete state.fetchingError;
       },
       prepare: () => {
-        const query = groq(_a$k || (_a$k = __template$k(['\n          {\n            "items": *[\n              _type == "', '"\n              && !(_id in path("drafts.**"))\n            ] {\n              _createdAt,\n              _updatedAt,\n              _id,\n              _rev,\n              _type,\n              name\n            } | order(name.current asc),\n          }\n        '])), SEASONS_DOCUMENT_NAME);
+        const query = groq(_a$k || (_a$k = __template$k(['\n          {\n            "items": *[\n              _type == "', '"\n              && !(_id in path("drafts.**"))\n            ] {\n              _createdAt,\n              _updatedAt,\n              _id,\n              _rev,\n              _type,\n              name\n            } | order(name.current asc),\n\n            "currentSeason": *[\n              _type == "', '"\n            ] {\n              _id,\n              _type,\n              name,\n              currentSeasonSelector{\n                seasons->\n              }\n            }\n          }\n        '])), SEASONS_DOCUMENT_NAME, CURRENT_SEASON_DOCUMENT_NAME);
         return {
           payload: {
             query
@@ -5859,13 +5862,19 @@ const seasonsSlice = createSlice({
     fetchComplete(state, action) {
       state.fetching = false;
       state.fetchingError = void 0;
-      const seasons = action.payload.seasons;
+      const {
+        seasons,
+        currentSeaon
+      } = action.payload;
       state.byIds = action.payload.seasons.reduce((acc, season) => {
         acc[season._id] = {
           _type: "seasonItem",
           error: void 0,
           picked: false,
-          season,
+          season: {
+            ...season,
+            isCurrentSeason: currentSeaon._id === season._id
+          },
           updating: false
         };
         return acc;
@@ -5875,7 +5884,10 @@ const seasonsSlice = createSlice({
         state.byIds[season._id] = {
           _type: "seasonItem",
           picked: false,
-          season,
+          season: {
+            ...season,
+            isCurrentSeason: currentSeaon._id === season._id
+          },
           updating: false
         };
       });
@@ -5986,10 +5998,12 @@ const seasonsFetchEpic = (action$, state$, _ref44) => {
     // Dispatch complete action
     mergeMap(result => {
       const {
-        items
+        items,
+        currentSeason
       } = result;
       return of(seasonsSlice.actions.fetchComplete({
-        seasons: items
+        seasons: items,
+        currentSeaon: currentSeason[0].currentSeasonSelector.seasons
       }));
     }), catchError(error => of(seasonsSlice.actions.fetchError({
       error: {
@@ -6012,7 +6026,8 @@ const seasonsCreateEpic = (action$, state$, _ref46) => {
       _type: SEASONS_DOCUMENT_NAME,
       name: {
         _type: "slug",
-        current: name
+        current: name,
+        isCurrentSeason: false
       }
     })), mergeMap(result => of(seasonsSlice.actions.createComplete({
       season: result
