@@ -7,7 +7,6 @@ import mediaTag from './schemas/tag'
 import mediaSeason from './schemas/season'
 import mediaCurrentSeason from './schemas/currentSeason'
 import mediaCollaboration from './schemas/collaborations'
-import {deskTool, StructureBuilder} from 'sanity/desk'
 
 const plugin = {
   icon: ImageIcon,
@@ -26,7 +25,6 @@ const tool = {
 } as SanityTool
 
 const singletonTypes = new Set(['currentseason'])
-const singletonActions = new Set(['publish', 'discardChanges', 'restore'])
 
 export const media = definePlugin({
   name: 'media',
@@ -48,31 +46,5 @@ export const media = definePlugin({
   },
   tools: prev => {
     return [...prev, tool]
-  },
-  plugins: [
-    deskTool({
-      structure: S =>
-        S.list()
-          .title('Seasons And Drops')
-          .items([
-            ...S.documentTypeListItems().filter(item => !singletonTypes.has(item.getId()!)),
-
-            S.divider(),
-
-            singletonListItem(S, 'currentseason', 'Select Current Season')
-          ])
-    })
-  ],
-  document: {
-    actions: (input, context) =>
-      singletonTypes.has(context.schemaType)
-        ? input.filter(({action}) => action && singletonActions.has(action))
-        : input
   }
 })
-
-const singletonListItem = (S: StructureBuilder, typeName: string, title?: string) =>
-  S.listItem()
-    .title(title || typeName)
-    .id(typeName)
-    .child(S.document().schemaType(typeName).documentId(typeName))
