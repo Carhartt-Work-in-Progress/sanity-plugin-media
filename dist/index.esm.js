@@ -12731,7 +12731,6 @@ const AssetGridVirtualized = props => {
   if (totalCount === 0) {
     return null;
   }
-  console.log(items);
   return /* @__PURE__ */jsx(VirtuosoGrid, {
     className: "media__custom-scrollbar",
     computeItemKey: index => {

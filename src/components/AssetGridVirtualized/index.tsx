@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import {CardAssetData, CardUploadData} from '@types'
 import React, {memo} from 'react'
 import {VirtuosoGrid} from 'react-virtuoso'
@@ -54,7 +53,7 @@ const AssetGridVirtualized = (props: Props) => {
   if (totalCount === 0) {
     return null
   }
-  console.log(items)
+
   return (
     <VirtuosoGrid
       className="media__custom-scrollbar"
