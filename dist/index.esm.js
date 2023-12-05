@@ -10074,7 +10074,7 @@ const DialogAssetEdit = props => {
   if (!currentAsset) {
     return null;
   }
-  console.log(currentValues.season);
+  console.log(currentValues, "CURRENT VALUESS");
   return /* @__PURE__ */jsxs(Dialog, {
     footer: /* @__PURE__ */jsx(Footer, {}),
     header: "Asset details",
@@ -11093,7 +11093,7 @@ const DialogMassAssetEdit = props => {
       name: collaborationName
     }));
   }, [dispatch]);
-  console.log(currentValues.season);
+  console.log(currentValues.season, "THE CURRENT VALUES");
   useEffect(() => {
     if (lastCreatedTag) {
       const existingTags = getValues("opt.media.tags") || [];
@@ -14881,7 +14881,7 @@ var mediaCurrentSeason = {
   name: CURRENT_SEASON_DOCUMENT_NAME,
   type: "document",
   fields: [{
-    name: "currentSeasonSelector",
+    name: "currentseason",
     type: "object",
     title: "Select Current Season",
     fields: [{
@@ -14892,7 +14892,15 @@ var mediaCurrentSeason = {
         type: "seasons"
       }]
     }]
-  }]
+  }],
+  preview: {
+    prepare() {
+      return {
+        media: TagIcon,
+        title: "Current Season"
+      };
+    }
+  }
 };
 var mediaCollaboration = {
   title: "Drops",
@@ -14933,7 +14941,6 @@ const tool = {
   component: Tool
 };
 const singletonTypes = /* @__PURE__ */new Set(["currentseason"]);
-const singletonActions = /* @__PURE__ */new Set(["publish", "discardChanges", "restore"]);
 const media = definePlugin({
   name: "media",
   form: {
@@ -14962,16 +14969,15 @@ const media = definePlugin({
   },
   plugins: [deskTool({
     structure: S => S.list().title("Structure").items([...S.documentTypeListItems().filter(item => !singletonTypes.has(item.getId())), S.divider(), singletonListItem(S, "currentseason", "Select Current Season")])
-  })],
-  document: {
-    actions: (input, context) => singletonTypes.has(context.schemaType) ? input.filter(_ref103 => {
-      let {
-        action
-      } = _ref103;
-      return action && singletonActions.has(action);
-    }) : input
-  }
+  })]
+  // document: {
+  //   actions: (input, context) =>
+  //     singletonTypes.has(context.schemaType)
+  //       ? input.filter(({action}) => action && singletonActions.has(action))
+  //       : input
+  // }
 });
+
 const singletonListItem = (S, typeName, title) => S.listItem().title(title || typeName).id(typeName).child(S.document().schemaType(typeName).documentId(typeName));
 export { media, mediaAssetSource };
 //# sourceMappingURL=index.esm.js.map

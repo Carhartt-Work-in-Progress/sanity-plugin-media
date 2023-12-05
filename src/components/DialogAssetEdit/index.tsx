@@ -296,7 +296,7 @@ const DialogAssetEdit = (props: Props) => {
     return null
   }
 
-  console.log(currentValues.season)
+  console.log(currentValues, 'CURRENT VALUESS')
 
   return (
     <Dialog footer={<Footer />} header="Asset details" id={id} onClose={handleClose} width={3}>

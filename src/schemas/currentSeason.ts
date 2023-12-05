@@ -8,7 +8,7 @@ export default {
   type: 'document',
   fields: [
     {
-      name: 'currentSeasonSelector',
+      name: 'currentseason',
       type: 'object',
       title: 'Select Current Season',
       fields: [
@@ -20,5 +20,13 @@ export default {
         }
       ]
     }
-  ]
+  ],
+  preview: {
+    prepare() {
+      return {
+        media: TagIcon,
+        title: 'Current Season'
+      }
+    }
+  }
 }

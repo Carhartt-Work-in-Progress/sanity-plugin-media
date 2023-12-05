@@ -26,7 +26,7 @@ const tool = {
 } as SanityTool
 
 const singletonTypes = new Set(['currentseason'])
-const singletonActions = new Set(['publish', 'discardChanges', 'restore'])
+// const singletonActions = new Set(['publish', 'discardChanges', 'restore'])
 
 export const media = definePlugin({
   name: 'media',
@@ -62,13 +62,13 @@ export const media = definePlugin({
             singletonListItem(S, 'currentseason', 'Select Current Season')
           ])
     })
-  ],
-  document: {
-    actions: (input, context) =>
-      singletonTypes.has(context.schemaType)
-        ? input.filter(({action}) => action && singletonActions.has(action))
-        : input
-  }
+  ]
+  // document: {
+  //   actions: (input, context) =>
+  //     singletonTypes.has(context.schemaType)
+  //       ? input.filter(({action}) => action && singletonActions.has(action))
+  //       : input
+  // }
 })
 
 const singletonListItem = (S: StructureBuilder, typeName: string, title?: string) =>

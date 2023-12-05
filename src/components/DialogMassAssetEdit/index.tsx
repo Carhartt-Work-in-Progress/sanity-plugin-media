@@ -159,7 +159,7 @@ const DialogMassAssetEdit = (props: Props) => {
     },
     [dispatch]
   )
-  console.log(currentValues.season)
+  console.log(currentValues.season, 'THE CURRENT VALUES')
   // Update tags form field (react-select) when a new _inline_ tag has been created
   useEffect(() => {
     if (lastCreatedTag) {
