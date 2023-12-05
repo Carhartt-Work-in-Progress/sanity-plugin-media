@@ -6197,9 +6197,9 @@ const seasonsCreateEpic = (action$, state$, _ref46) => {
       _type: SEASONS_DOCUMENT_NAME,
       name: {
         _type: "slug",
-        current: name,
-        isCurrentSeason: false
-      }
+        current: name
+      },
+      isCurrentSeason: false
     })), mergeMap(result => of(seasonsSlice.actions.createComplete({
       season: result
     }))), catchError(error => of(seasonsSlice.actions.createError({
@@ -6296,13 +6296,14 @@ const selectSeasonsByIds = state => state.seasons.byIds;
 const selectSeasonById = createSelector([selectSeasonsByIds, (_state, seasonId) => seasonId], (byIds, seasonId) => byIds[seasonId]);
 const selectSeasons = createSelector(selectSeasonsByIds, byIds => Object.values(byIds));
 const selectInitialSelectedSeasons = asset => createSelector(selectSeasons, seasons => {
-  var _a2, _b2, _c, _d, _e, _f, _g, _h, _i, _j, _k;
+  var _a2, _b2, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l;
   const selectedCollaboration = (_c = (_a2 = asset == null ? void 0 : asset.season) == null ? void 0 : _a2._ref) != null ? _c : (_b2 = asset == null ? void 0 : asset.season) == null ? void 0 : _b2._id;
   const season = seasons.find(seasonItem => seasonItem.season._id === selectedCollaboration);
   if (((_e = (_d = season == null ? void 0 : season.season) == null ? void 0 : _d.name) == null ? void 0 : _e.current) && ((_f = season == null ? void 0 : season.season) == null ? void 0 : _f._id)) {
     return {
       label: (_i = (_h = (_g = season == null ? void 0 : season.season) == null ? void 0 : _g.name) == null ? void 0 : _h.current) != null ? _i : "",
-      value: (_k = (_j = season == null ? void 0 : season.season) == null ? void 0 : _j._id) != null ? _k : ""
+      value: (_k = (_j = season == null ? void 0 : season.season) == null ? void 0 : _j._id) != null ? _k : "",
+      isCurrentSeason: (_l = season == null ? void 0 : season.season) == null ? void 0 : _l.isCurrentSeason
     };
   }
   return null;
@@ -9891,7 +9892,6 @@ const DialogAssetEdit = props => {
   const tags = useTypedSelector(selectTags);
   const seasons = useTypedSelector(selectSeasons);
   const collaboration = useTypedSelector(selectCollaborations);
-  console.log(seasons, "THE SEASONS");
   const assetUpdatedPrev = useRef(void 0);
   const [assetSnapshot, setAssetSnapshot] = useState(assetItem == null ? void 0 : assetItem.asset);
   const [tabSection, setTabSection] = useState("details");
@@ -9998,7 +9998,8 @@ const DialogAssetEdit = props => {
         season: ((_b = sanitizedFormData == null ? void 0 : sanitizedFormData.season) == null ? void 0 : _b.value) ? {
           _ref: sanitizedFormData.season.value,
           _type: "reference",
-          _weak: true
+          _weak: true,
+          isCurrentSeason: sanitizedFormData.season.isCurrentSeason
         } : null,
         // Map tags to sanity references
         opt: {
@@ -11064,7 +11065,8 @@ const DialogMassAssetEdit = props => {
         season: {
           _ref: sanitizedFormData.season.value,
           _type: "reference",
-          _weak: true
+          _weak: true,
+          isCurrentSeason: sanitizedFormData.season.isCurrentSeason
         },
         // Map tags to sanity references
         opt: {

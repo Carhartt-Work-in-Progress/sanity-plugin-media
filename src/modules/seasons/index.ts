@@ -25,8 +25,8 @@ export type Season = SanityDocument & {
   name: {
     _type: 'slug'
     current: string
-    isCurrentSeason: boolean
   }
+  isCurrentSeason: boolean
 }
 
 export type CurrentSeason = SanityDocument & {
@@ -295,9 +295,9 @@ export const seasonsCreateEpic: MyEpic = (action$, state$, {client}) =>
             _type: SEASONS_DOCUMENT_NAME,
             name: {
               _type: 'slug',
-              current: name,
-              isCurrentSeason: false
-            }
+              current: name
+            },
+            isCurrentSeason: false
           })
         ),
         mergeMap(result => of(seasonsSlice.actions.createComplete({season: result as Season}))),
@@ -454,7 +454,8 @@ export const selectInitialSelectedSeasons = (asset?: Asset) =>
     if (season?.season?.name?.current && season?.season?._id) {
       return {
         label: season?.season?.name?.current ?? '',
-        value: season?.season?._id ?? ''
+        value: season?.season?._id ?? '',
+        isCurrentSeason: season?.season?.isCurrentSeason
       }
     }
     return null

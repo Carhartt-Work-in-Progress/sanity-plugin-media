@@ -61,7 +61,6 @@ const DialogAssetEdit = (props: Props) => {
   const tags = useTypedSelector(selectTags)
   const seasons = useTypedSelector(selectSeasons)
   const collaboration = useTypedSelector(selectCollaborations)
-  console.log(seasons, 'THE SEASONS')
   const assetUpdatedPrev = useRef<string | undefined>(undefined)
 
   // Generate a snapshot of the current asset
@@ -201,7 +200,8 @@ const DialogAssetEdit = (props: Props) => {
               ? {
                   _ref: sanitizedFormData.season.value,
                   _type: 'reference',
-                  _weak: true
+                  _weak: true,
+                  isCurrentSeason: sanitizedFormData.season.isCurrentSeason
                 }
               : null,
             // Map tags to sanity references
