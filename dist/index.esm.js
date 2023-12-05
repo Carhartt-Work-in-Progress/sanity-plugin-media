@@ -10074,7 +10074,6 @@ const DialogAssetEdit = props => {
   if (!currentAsset) {
     return null;
   }
-  console.log(currentValues, "CURRENT VALUESS");
   return /* @__PURE__ */jsxs(Dialog, {
     footer: /* @__PURE__ */jsx(Footer, {}),
     header: "Asset details",
@@ -11001,7 +11000,6 @@ const DialogMassAssetEdit = props => {
   const [tabSection, setTabSection] = useState("details");
   const seasons = useTypedSelector(selectSeasons);
   const collaborations = useTypedSelector(selectCollaborations);
-  console.log(seasons, "THE SEASONS");
   const allTagOptions = getTagSelectOptions(tags);
   const allSeasonOptions = getSeasonSelectOptions(seasons);
   const allCollaborationOptions = getSeasonCollaborationOptions(collaborations);
@@ -11095,7 +11093,6 @@ const DialogMassAssetEdit = props => {
       name: collaborationName
     }));
   }, [dispatch]);
-  console.log(currentValues.season, "THE CURRENT VALUES");
   useEffect(() => {
     if (lastCreatedTag) {
       const existingTags = getValues("opt.media.tags") || [];
@@ -12734,6 +12731,7 @@ const AssetGridVirtualized = props => {
   if (totalCount === 0) {
     return null;
   }
+  console.log(items);
   return /* @__PURE__ */jsx(VirtuosoGrid, {
     className: "media__custom-scrollbar",
     computeItemKey: index => {

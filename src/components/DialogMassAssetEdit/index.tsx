@@ -45,7 +45,6 @@ const DialogMassAssetEdit = (props: Props) => {
   const [tabSection, setTabSection] = useState<'details' | 'references'>('details')
   const seasons = useTypedSelector(selectSeasons)
   const collaborations = useTypedSelector(selectCollaborations)
-  console.log(seasons, 'THE SEASONS')
 
   const allTagOptions = getTagSelectOptions(tags)
   const allSeasonOptions = getSeasonSelectOptions(seasons)
@@ -161,7 +160,7 @@ const DialogMassAssetEdit = (props: Props) => {
     },
     [dispatch]
   )
-  console.log(currentValues.season, 'THE CURRENT VALUES')
+
   // Update tags form field (react-select) when a new _inline_ tag has been created
   useEffect(() => {
     if (lastCreatedTag) {
