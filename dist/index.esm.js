@@ -28,7 +28,6 @@ import CreatableSelect from 'react-select/creatable';
 import { useDebounce } from 'usehooks-ts';
 import formatRelative from 'date-fns/formatRelative';
 import { useDropzone } from 'react-dropzone';
-import { deskTool } from 'sanity/desk';
 const AccessDeniedIcon = forwardRef(function AccessDeniedIcon2(props, ref) {
   return /* @__PURE__ */jsx("svg", {
     "data-sanity-icon": "access-denied",
@@ -6023,7 +6022,7 @@ const seasonsSlice = createSlice({
         delete state.fetchingError;
       },
       prepare: () => {
-        const query = groq(_a$k || (_a$k = __template$k(['\n          {\n            "items": *[\n              _type == "', '"\n              && !(_id in path("drafts.**"))\n            ] {\n              _createdAt,\n              _updatedAt,\n              _id,\n              _rev,\n              _type,\n              name\n            } | order(name.current asc),\n\n            "currentSeason": *[\n              _type == "', '"\n            ] {\n              _id,\n              _type,\n              name,\n              currentSeasonSelector{\n                seasons->\n              }\n            }\n          }\n        '])), SEASONS_DOCUMENT_NAME, CURRENT_SEASON_DOCUMENT_NAME);
+        const query = groq(_a$k || (_a$k = __template$k(['\n          {\n            "items": *[\n              _type == "', '"\n              && !(_id in path("drafts.**"))\n            ] {\n              _createdAt,\n              _updatedAt,\n              _id,\n              _rev,\n              _type,\n              name\n            } | order(name.current asc),\n\n            "currentSeason": *[\n              _type == "', '"\n              && !(_id in path("drafts.**"))\n            ] {\n              _id,\n              _type,\n              name,\n              currentseason{\n                seasons->\n              }\n            }\n          }\n        '])), SEASONS_DOCUMENT_NAME, CURRENT_SEASON_DOCUMENT_NAME);
         return {
           payload: {
             query
@@ -6175,7 +6174,7 @@ const seasonsFetchEpic = (action$, state$, _ref44) => {
       } = result;
       return of(seasonsSlice.actions.fetchComplete({
         seasons: items,
-        currentSeaon: currentSeason[0].currentSeasonSelector.seasons
+        currentSeaon: currentSeason[0].currentseason.seasons
       }));
     }), catchError(error => of(seasonsSlice.actions.fetchError({
       error: {
@@ -14968,9 +14967,18 @@ const media = definePlugin({
   tools: prev => {
     return [...prev, tool];
   },
-  plugins: [deskTool({
-    structure: S => S.list().title("Structure").items([...S.documentTypeListItems().filter(item => !singletonTypes.has(item.getId())), S.divider(), singletonListItem(S, "currentseason", "Select Current Season")])
-  })]
+  plugins: [
+    // deskTool({
+    //   structure: S =>
+    //     S.list()
+    //       .title('Structure')
+    //       .items([
+    //         ...S.documentTypeListItems().filter(item => !singletonTypes.has(item.getId()!)),
+    //         S.divider(),
+    //         singletonListItem(S, 'currentseason', 'Select Current Season')
+    //       ])
+    // })
+  ]
   // document: {
   //   actions: (input, context) =>
   //     singletonTypes.has(context.schemaType)
@@ -14979,6 +14987,5 @@ const media = definePlugin({
   // }
 });
 
-const singletonListItem = (S, typeName, title) => S.listItem().title(title || typeName).id(typeName).child(S.document().schemaType(typeName).documentId(typeName));
 export { media, mediaAssetSource };
 //# sourceMappingURL=index.esm.js.map

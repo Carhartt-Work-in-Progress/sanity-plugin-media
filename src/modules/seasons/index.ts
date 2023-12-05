@@ -30,7 +30,7 @@ export type Season = SanityDocument & {
 }
 
 export type CurrentSeason = SanityDocument & {
-  currentSeasonSelector: {
+  currentseason: {
     seasons: Season
   }
 }
@@ -109,11 +109,12 @@ const seasonsSlice = createSlice({
 
             "currentSeason": *[
               _type == "${CURRENT_SEASON_DOCUMENT_NAME}"
+              && !(_id in path("drafts.**"))
             ] {
               _id,
               _type,
               name,
-              currentSeasonSelector{
+              currentseason{
                 seasons->
               }
             }
@@ -261,7 +262,7 @@ export const seasonsFetchEpic: MyEpic = (action$, state$, {client}) => {
           return of(
             seasonsSlice.actions.fetchComplete({
               seasons: items,
-              currentSeaon: currentSeason[0].currentSeasonSelector.seasons
+              currentSeaon: currentSeason[0].currentseason.seasons
             })
           )
         }),
