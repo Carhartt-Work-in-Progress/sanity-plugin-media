@@ -25,7 +25,8 @@ const tool = {
   component: Tool
 } as SanityTool
 
-const singletonTypes = new Set(['currentSeasonSelector'])
+const singletonTypes = new Set(['currentseason'])
+const singletonActions = new Set(['publish', 'discardChanges', 'restore'])
 
 export const media = definePlugin({
   name: 'media',
@@ -42,7 +43,8 @@ export const media = definePlugin({
     }
   },
   schema: {
-    types: [mediaTag, mediaSeason, mediaCurrentSeason, mediaCollaboration]
+    types: [mediaTag, mediaSeason, mediaCurrentSeason, mediaCollaboration],
+    templates: templates => templates.filter(({schemaType}) => !singletonTypes.has(schemaType))
   },
   tools: prev => {
     return [...prev, tool]
@@ -53,17 +55,20 @@ export const media = definePlugin({
         S.list()
           .title('Structure')
           .items([
-            ...S.documentTypeListItems().filter(item => {
-              console.warn('THDE ITEMIDS', item.getId())
-              return !singletonTypes.has(item.getId()!)
-            }),
+            ...S.documentTypeListItems().filter(item => !singletonTypes.has(item.getId()!)),
 
             S.divider(),
 
-            singletonListItem(S, 'currentSeasonSelector', 'Select Current Season')
+            singletonListItem(S, 'currentseason', 'Select Current Season')
           ])
     })
-  ]
+  ],
+  document: {
+    actions: (input, context) =>
+      singletonTypes.has(context.schemaType)
+        ? input.filter(({action}) => action && singletonActions.has(action))
+        : input
+  }
 })
 
 const singletonListItem = (S: StructureBuilder, typeName: string, title?: string) =>

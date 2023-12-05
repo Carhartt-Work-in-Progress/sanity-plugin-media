@@ -14959,7 +14959,7 @@ var mediaCurrentSeason = {
   }],
   preview: {
     select: {
-      name: "currentSeasonSelector.name"
+      name: "currentSeasonSelector"
     },
     prepare(selection) {
       console.warn("THE SELECTION", selection);
@@ -15010,7 +15010,8 @@ const tool = {
   ...plugin,
   component: Tool
 };
-const singletonTypes = /* @__PURE__ */new Set(["currentSeasonSelector"]);
+const singletonTypes = /* @__PURE__ */new Set(["currentseason"]);
+const singletonActions = /* @__PURE__ */new Set(["publish", "discardChanges", "restore"]);
 const media = definePlugin({
   name: "media",
   form: {
@@ -15026,17 +15027,28 @@ const media = definePlugin({
     }
   },
   schema: {
-    types: [mediaTag, mediaSeason, mediaCurrentSeason, mediaCollaboration]
+    types: [mediaTag, mediaSeason, mediaCurrentSeason, mediaCollaboration],
+    templates: templates => templates.filter(_ref102 => {
+      let {
+        schemaType
+      } = _ref102;
+      return !singletonTypes.has(schemaType);
+    })
   },
   tools: prev => {
     return [...prev, tool];
   },
   plugins: [deskTool({
-    structure: S => S.list().title("Structure").items([...S.documentTypeListItems().filter(item => {
-      console.warn("THDE ITEMIDS", item.getId());
-      return !singletonTypes.has(item.getId());
-    }), S.divider(), singletonListItem(S, "currentSeasonSelector", "Select Current Season")])
-  })]
+    structure: S => S.list().title("Structure").items([...S.documentTypeListItems().filter(item => !singletonTypes.has(item.getId())), S.divider(), singletonListItem(S, "currentseason", "Select Current Season")])
+  })],
+  document: {
+    actions: (input, context) => singletonTypes.has(context.schemaType) ? input.filter(_ref103 => {
+      let {
+        action
+      } = _ref103;
+      return action && singletonActions.has(action);
+    }) : input
+  }
 });
 const singletonListItem = (S, typeName, title) => S.listItem().title(title || typeName).id(typeName).child(S.document().schemaType(typeName).documentId(typeName));
 export { media, mediaAssetSource };

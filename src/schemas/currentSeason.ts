@@ -23,7 +23,7 @@ export default {
   ],
   preview: {
     select: {
-      name: 'currentSeasonSelector.name'
+      name: 'currentSeasonSelector'
     },
 
     prepare(selection: any) {
