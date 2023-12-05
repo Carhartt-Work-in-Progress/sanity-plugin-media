@@ -1023,6 +1023,29 @@ const CropIcon = forwardRef(function CropIcon2(props, ref) {
     })
   });
 });
+const CubeIcon = forwardRef(function CubeIcon2(props, ref) {
+  return /* @__PURE__ */jsxs("svg", {
+    "data-sanity-icon": "cube",
+    width: "1em",
+    height: "1em",
+    viewBox: "0 0 25 25",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    ref,
+    ...props,
+    children: [/* @__PURE__ */jsx("path", {
+      d: "M4.5 8L12.5 3L20.5 8V17L12.5 22L4.5 17V8Z",
+      stroke: "currentColor",
+      strokeWidth: 1.2,
+      strokeLinejoin: "round"
+    }), /* @__PURE__ */jsx("path", {
+      d: "M12.5 22V13M12.5 13L4.5 8M12.5 13L20.5 8",
+      stroke: "currentColor",
+      strokeWidth: 1.2,
+      strokeLinejoin: "round"
+    })]
+  });
+});
 const DashboardIcon = forwardRef(function DashboardIcon2(props, ref) {
   return /* @__PURE__ */jsx("svg", {
     "data-sanity-icon": "dashboard",
@@ -2134,6 +2157,24 @@ const JoystickIcon = forwardRef(function JoystickIcon2(props, ref) {
     })
   });
 });
+const JsonIcon = forwardRef(function JsonIcon2(props, ref) {
+  return /* @__PURE__ */jsx("svg", {
+    "data-sanity-icon": "json",
+    width: "1em",
+    height: "1em",
+    viewBox: "0 0 25 25",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    ref,
+    ...props,
+    children: /* @__PURE__ */jsx("path", {
+      d: "M11 5.5H9.5C8.39543 5.5 7.5 6.39543 7.5 7.5V12.5M7.5 12.5H4M7.5 12.5V17.5C7.5 18.6046 8.39543 19.5 9.5 19.5H11M14 5.5H15.5C16.6046 5.5 17.5 6.39543 17.5 7.5V12.5M17.5 12.5H21M17.5 12.5V17.5C17.5 18.6046 16.6046 19.5 15.5 19.5H14",
+      stroke: "currentColor",
+      strokeWidth: 1.2,
+      strokeLinejoin: "round"
+    })
+  });
+});
 const LaunchIcon = forwardRef(function LaunchIcon2(props, ref) {
   return /* @__PURE__ */jsxs("svg", {
     "data-sanity-icon": "launch",
@@ -2469,6 +2510,42 @@ const PackageIcon = forwardRef(function PackageIcon2(props, ref) {
     })
   });
 });
+const PanelLeftIcon = forwardRef(function PanelLeftIcon2(props, ref) {
+  return /* @__PURE__ */jsx("svg", {
+    "data-sanity-icon": "panel-left",
+    width: "1em",
+    height: "1em",
+    viewBox: "0 0 25 25",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    ref,
+    ...props,
+    children: /* @__PURE__ */jsx("path", {
+      d: "M10.5 6.5H19.5V18.5H10.5M10.5 6.5H5.5V18.5H10.5M10.5 6.5V18.5",
+      stroke: "currentColor",
+      strokeWidth: 1.2,
+      strokeLinejoin: "round"
+    })
+  });
+});
+const PanelRightIcon = forwardRef(function PanelRightIcon2(props, ref) {
+  return /* @__PURE__ */jsx("svg", {
+    "data-sanity-icon": "panel-right",
+    width: "1em",
+    height: "1em",
+    viewBox: "0 0 25 25",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    ref,
+    ...props,
+    children: /* @__PURE__ */jsx("path", {
+      d: "M14.5 6.5H19.5V18.5H14.5M14.5 6.5H5.5V18.5H14.5M14.5 6.5V18.5",
+      stroke: "currentColor",
+      strokeWidth: 1.2,
+      strokeLinejoin: "round"
+    })
+  });
+});
 const PauseIcon = forwardRef(function PauseIcon2(props, ref) {
   return /* @__PURE__ */jsxs("svg", {
     "data-sanity-icon": "pause",
@@ -2633,6 +2710,52 @@ const ReadOnlyIcon = forwardRef(function ReadOnlyIcon2(props, ref) {
     })
   });
 });
+const RedoIcon = forwardRef(function RedoIcon2(props, ref) {
+  return /* @__PURE__ */jsxs("svg", {
+    "data-sanity-icon": "redo",
+    width: "1em",
+    height: "1em",
+    viewBox: "0 0 25 25",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    ref,
+    ...props,
+    children: [/* @__PURE__ */jsx("path", {
+      d: "M19 9.5L10 9.5C7.51472 9.5 5.5 11.5147 5.5 14C5.5 16.4853 7.51472 18.5 10 18.5H19",
+      stroke: "currentColor",
+      strokeWidth: 1.2,
+      strokeLinejoin: "round"
+    }), /* @__PURE__ */jsx("path", {
+      d: "M15 13.5L19 9.5L15 5.5",
+      stroke: "currentColor",
+      strokeWidth: 1.2,
+      strokeLinejoin: "round"
+    })]
+  });
+});
+const RefreshIcon = forwardRef(function RefreshIcon2(props, ref) {
+  return /* @__PURE__ */jsxs("svg", {
+    "data-sanity-icon": "refresh",
+    width: "1em",
+    height: "1em",
+    viewBox: "0 0 25 25",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    ref,
+    ...props,
+    children: [/* @__PURE__ */jsx("path", {
+      d: "M19.5 13.5C19.5 17.366 16.366 20.5 12.5 20.5C8.63401 20.5 5.5 17.366 5.5 13.5C5.5 9.63401 8.63401 6.5 12.5 6.5H15.5",
+      stroke: "currentColor",
+      strokeWidth: 1.2,
+      strokeLinejoin: "round"
+    }), /* @__PURE__ */jsx("path", {
+      d: "M11.5 10.5L15.5 6.5L11.5 2.5",
+      stroke: "currentColor",
+      strokeWidth: 1.2,
+      strokeLinejoin: "round"
+    })]
+  });
+});
 const RemoveCircleIcon = forwardRef(function RemoveCircleIcon2(props, ref) {
   return /* @__PURE__ */jsx("svg", {
     "data-sanity-icon": "remove-circle",
@@ -2742,12 +2865,12 @@ const RetryIcon = forwardRef(function RetryIcon2(props, ref) {
     ref,
     ...props,
     children: [/* @__PURE__ */jsx("path", {
-      d: "M20 9L10 9C7.51472 9 5.5 11.0147 5.5 13.5C5.5 15.9853 7.51472 18 10 18H20",
+      d: "M19 9.5L10 9.5C7.51472 9.5 5.5 11.5147 5.5 14C5.5 16.4853 7.51472 18.5 10 18.5H19",
       stroke: "currentColor",
       strokeWidth: 1.2,
       strokeLinejoin: "round"
     }), /* @__PURE__ */jsx("path", {
-      d: "M16 13L20 9L16 5",
+      d: "M15 13.5L19 9.5L15 5.5",
       stroke: "currentColor",
       strokeWidth: 1.2,
       strokeLinejoin: "round"
@@ -2765,12 +2888,12 @@ const RevertIcon = forwardRef(function RevertIcon2(props, ref) {
     ref,
     ...props,
     children: [/* @__PURE__ */jsx("path", {
-      d: "M5 9L15 9C17.4853 9 19.5 11.0147 19.5 13.5C19.5 15.9853 17.4853 18 15 18H5",
+      d: "M6 9.5L15 9.5C17.4853 9.5 19.5 11.5147 19.5 14C19.5 16.4853 17.4853 18.5 15 18.5H6",
       stroke: "currentColor",
       strokeWidth: 1.2,
       strokeLinejoin: "round"
     }), /* @__PURE__ */jsx("path", {
-      d: "M9 13L5 9L9 5",
+      d: "M10 13.5L6 9.5L10 5.5",
       stroke: "currentColor",
       strokeWidth: 1.2,
       strokeLinejoin: "round"
@@ -3183,6 +3306,29 @@ const SyncIcon = forwardRef(function SyncIcon2(props, ref) {
     })]
   });
 });
+const TabletDeviceIcon = forwardRef(function TabletDeviceIcon2(props, ref) {
+  return /* @__PURE__ */jsxs("svg", {
+    "data-sanity-icon": "tablet-device",
+    width: "1em",
+    height: "1em",
+    viewBox: "0 0 25 25",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    ref,
+    ...props,
+    children: [/* @__PURE__ */jsx("path", {
+      d: "M5.5 5.5C5.5 4.94772 5.94772 4.5 6.5 4.5H18.5C19.0523 4.5 19.5 4.94772 19.5 5.5V19.5C19.5 20.0523 19.0523 20.5 18.5 20.5H6.5C5.94772 20.5 5.5 20.0523 5.5 19.5V5.5Z",
+      stroke: "currentColor",
+      strokeWidth: 1.2,
+      strokeLinejoin: "round"
+    }), /* @__PURE__ */jsx("path", {
+      d: "M13 18C13 18.2761 12.7761 18.5 12.5 18.5C12.2239 18.5 12 18.2761 12 18C12 17.7239 12.2239 17.5 12.5 17.5C12.7761 17.5 13 17.7239 13 18Z",
+      stroke: "currentColor",
+      strokeWidth: 1.2,
+      strokeLinejoin: "round"
+    })]
+  });
+});
 const TagIcon$1 = forwardRef(function TagIcon2(props, ref) {
   return /* @__PURE__ */jsxs("svg", {
     "data-sanity-icon": "tag",
@@ -3236,6 +3382,24 @@ const TerminalIcon = forwardRef(function TerminalIcon2(props, ref) {
     ...props,
     children: /* @__PURE__ */jsx("path", {
       d: "M8.5 9.5L11.5 12.5L8.5 15.5M13 15.5H17M5.5 6.5H19.5V18.5H5.5V6.5Z",
+      stroke: "currentColor",
+      strokeWidth: 1.2,
+      strokeLinejoin: "round"
+    })
+  });
+});
+const TextIcon = forwardRef(function TextIcon2(props, ref) {
+  return /* @__PURE__ */jsx("svg", {
+    "data-sanity-icon": "text",
+    width: "1em",
+    height: "1em",
+    viewBox: "0 0 25 25",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    ref,
+    ...props,
+    children: /* @__PURE__ */jsx("path", {
+      d: "M7.5 9V6.5H17.5V9M12.5 18.5V6.5M10 18.5H15",
       stroke: "currentColor",
       strokeWidth: 1.2,
       strokeLinejoin: "round"
@@ -3783,6 +3947,7 @@ const icons = {
   copy: CopyIcon,
   "credit-card": CreditCardIcon,
   crop: CropIcon,
+  cube: CubeIcon,
   dashboard: DashboardIcon,
   database: DatabaseIcon,
   desktop: DesktopIcon,
@@ -3837,6 +4002,7 @@ const icons = {
   "insert-below": InsertBelowIcon,
   italic: ItalicIcon,
   joystick: JoystickIcon,
+  json: JsonIcon,
   launch: LaunchIcon,
   leave: LeaveIcon,
   lemon: LemonIcon,
@@ -3854,6 +4020,8 @@ const icons = {
   olist: OlistIcon,
   overage: OverageIcon,
   package: PackageIcon,
+  "panel-left": PanelLeftIcon,
+  "panel-right": PanelRightIcon,
   pause: PauseIcon,
   pin: PinIcon,
   "pin-removed": PinRemovedIcon,
@@ -3862,6 +4030,8 @@ const icons = {
   presentation: PresentationIcon,
   publish: PublishIcon,
   "read-only": ReadOnlyIcon,
+  redo: RedoIcon,
+  refresh: RefreshIcon,
   "remove-circle": RemoveCircleIcon,
   remove: RemoveIcon,
   reset: ResetIcon,
@@ -3890,9 +4060,11 @@ const icons = {
   string: StringIcon,
   sun: SunIcon,
   sync: SyncIcon,
+  "tablet-device": TabletDeviceIcon,
   tag: TagIcon$1,
   tags: TagsIcon,
   terminal: TerminalIcon,
+  text: TextIcon,
   "th-large": ThLargeIcon,
   "th-list": ThListIcon,
   tiers: TiersIcon,
@@ -8223,6 +8395,7 @@ const TextInputSearch = () => {
         zIndex: 1
         // force stacking context
       },
+
       children: /* @__PURE__ */jsx(CloseIcon, {})
     })]
   });
@@ -10861,6 +11034,7 @@ const DialogTags = props => {
         minHeight: "420px"
         // explicit height required as <TagView> is virtualized
       },
+
       children: /* @__PURE__ */jsx(TagView, {})
     }), children]
   });
@@ -12747,6 +12921,7 @@ const TableHeader = () => {
       zIndex: 1
       // force stacking context
     },
+
     children: [onSelect ? /* @__PURE__ */jsx(TableHeaderItem, {}) : /* @__PURE__ */jsx(ContextActionContainer$1, {
       align: "center",
       justify: "center",
@@ -13640,6 +13815,7 @@ class ReduxProvider extends Component {
         // inject sanity client as a dependency to all epics
       }
     });
+
     this.store = configureStore({
       reducer: rootReducer,
       middleware: getDefaultMiddleware => getDefaultMiddleware({
@@ -14786,17 +14962,16 @@ var mediaCurrentSeason = {
       name: "currentSeasonSelector.name"
     },
     prepare(selection) {
-      const {
-        name
-      } = selection;
+      console.warn("THE SELECTION", selection);
       return {
         media: TagIcon,
-        title: "Current Season",
-        subtitle: name
+        title: "Current Season"
+        // subtitle: name
       };
     }
   }
 };
+
 var mediaCollaboration = {
   title: "Drops",
   icon: TagIcon,
@@ -14857,7 +15032,10 @@ const media = definePlugin({
     return [...prev, tool];
   },
   plugins: [deskTool({
-    structure: S => S.list().title("Structure").items([...S.documentTypeListItems().filter(item => !singletonTypes.has(item.getId())), S.divider(), singletonListItem(S, "currentSeasonSelector", "Select Current Season")])
+    structure: S => S.list().title("Structure").items([...S.documentTypeListItems().filter(item => {
+      console.warn("THDE ITEMIDS", item.getId());
+      return !singletonTypes.has(item.getId());
+    }), S.divider(), singletonListItem(S, "currentSeasonSelector", "Select Current Season")])
   })]
 });
 const singletonListItem = (S, typeName, title) => S.listItem().title(title || typeName).id(typeName).child(S.document().schemaType(typeName).documentId(typeName));

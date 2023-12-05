@@ -53,7 +53,10 @@ export const media = definePlugin({
         S.list()
           .title('Structure')
           .items([
-            ...S.documentTypeListItems().filter(item => !singletonTypes.has(item.getId()!)),
+            ...S.documentTypeListItems().filter(item => {
+              console.warn('THDE ITEMIDS', item.getId())
+              return !singletonTypes.has(item.getId()!)
+            }),
 
             S.divider(),
 
