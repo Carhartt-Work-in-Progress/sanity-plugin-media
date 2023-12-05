@@ -45,6 +45,7 @@ const DialogMassAssetEdit = (props: Props) => {
   const [tabSection, setTabSection] = useState<'details' | 'references'>('details')
   const seasons = useTypedSelector(selectSeasons)
   const collaborations = useTypedSelector(selectCollaborations)
+  console.log(seasons, 'THE SEASONS')
 
   const allTagOptions = getTagSelectOptions(tags)
   const allSeasonOptions = getSeasonSelectOptions(seasons)
