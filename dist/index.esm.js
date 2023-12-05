@@ -1022,6 +1022,29 @@ const CropIcon = forwardRef(function CropIcon2(props, ref) {
     })
   });
 });
+const CubeIcon = forwardRef(function CubeIcon2(props, ref) {
+  return /* @__PURE__ */jsxs("svg", {
+    "data-sanity-icon": "cube",
+    width: "1em",
+    height: "1em",
+    viewBox: "0 0 25 25",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    ref,
+    ...props,
+    children: [/* @__PURE__ */jsx("path", {
+      d: "M4.5 8L12.5 3L20.5 8V17L12.5 22L4.5 17V8Z",
+      stroke: "currentColor",
+      strokeWidth: 1.2,
+      strokeLinejoin: "round"
+    }), /* @__PURE__ */jsx("path", {
+      d: "M12.5 22V13M12.5 13L4.5 8M12.5 13L20.5 8",
+      stroke: "currentColor",
+      strokeWidth: 1.2,
+      strokeLinejoin: "round"
+    })]
+  });
+});
 const DashboardIcon = forwardRef(function DashboardIcon2(props, ref) {
   return /* @__PURE__ */jsx("svg", {
     "data-sanity-icon": "dashboard",
@@ -2133,6 +2156,24 @@ const JoystickIcon = forwardRef(function JoystickIcon2(props, ref) {
     })
   });
 });
+const JsonIcon = forwardRef(function JsonIcon2(props, ref) {
+  return /* @__PURE__ */jsx("svg", {
+    "data-sanity-icon": "json",
+    width: "1em",
+    height: "1em",
+    viewBox: "0 0 25 25",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    ref,
+    ...props,
+    children: /* @__PURE__ */jsx("path", {
+      d: "M11 5.5H9.5C8.39543 5.5 7.5 6.39543 7.5 7.5V12.5M7.5 12.5H4M7.5 12.5V17.5C7.5 18.6046 8.39543 19.5 9.5 19.5H11M14 5.5H15.5C16.6046 5.5 17.5 6.39543 17.5 7.5V12.5M17.5 12.5H21M17.5 12.5V17.5C17.5 18.6046 16.6046 19.5 15.5 19.5H14",
+      stroke: "currentColor",
+      strokeWidth: 1.2,
+      strokeLinejoin: "round"
+    })
+  });
+});
 const LaunchIcon = forwardRef(function LaunchIcon2(props, ref) {
   return /* @__PURE__ */jsxs("svg", {
     "data-sanity-icon": "launch",
@@ -2468,6 +2509,42 @@ const PackageIcon = forwardRef(function PackageIcon2(props, ref) {
     })
   });
 });
+const PanelLeftIcon = forwardRef(function PanelLeftIcon2(props, ref) {
+  return /* @__PURE__ */jsx("svg", {
+    "data-sanity-icon": "panel-left",
+    width: "1em",
+    height: "1em",
+    viewBox: "0 0 25 25",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    ref,
+    ...props,
+    children: /* @__PURE__ */jsx("path", {
+      d: "M10.5 6.5H19.5V18.5H10.5M10.5 6.5H5.5V18.5H10.5M10.5 6.5V18.5",
+      stroke: "currentColor",
+      strokeWidth: 1.2,
+      strokeLinejoin: "round"
+    })
+  });
+});
+const PanelRightIcon = forwardRef(function PanelRightIcon2(props, ref) {
+  return /* @__PURE__ */jsx("svg", {
+    "data-sanity-icon": "panel-right",
+    width: "1em",
+    height: "1em",
+    viewBox: "0 0 25 25",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    ref,
+    ...props,
+    children: /* @__PURE__ */jsx("path", {
+      d: "M14.5 6.5H19.5V18.5H14.5M14.5 6.5H5.5V18.5H14.5M14.5 6.5V18.5",
+      stroke: "currentColor",
+      strokeWidth: 1.2,
+      strokeLinejoin: "round"
+    })
+  });
+});
 const PauseIcon = forwardRef(function PauseIcon2(props, ref) {
   return /* @__PURE__ */jsxs("svg", {
     "data-sanity-icon": "pause",
@@ -2632,6 +2709,52 @@ const ReadOnlyIcon = forwardRef(function ReadOnlyIcon2(props, ref) {
     })
   });
 });
+const RedoIcon = forwardRef(function RedoIcon2(props, ref) {
+  return /* @__PURE__ */jsxs("svg", {
+    "data-sanity-icon": "redo",
+    width: "1em",
+    height: "1em",
+    viewBox: "0 0 25 25",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    ref,
+    ...props,
+    children: [/* @__PURE__ */jsx("path", {
+      d: "M19 9.5L10 9.5C7.51472 9.5 5.5 11.5147 5.5 14C5.5 16.4853 7.51472 18.5 10 18.5H19",
+      stroke: "currentColor",
+      strokeWidth: 1.2,
+      strokeLinejoin: "round"
+    }), /* @__PURE__ */jsx("path", {
+      d: "M15 13.5L19 9.5L15 5.5",
+      stroke: "currentColor",
+      strokeWidth: 1.2,
+      strokeLinejoin: "round"
+    })]
+  });
+});
+const RefreshIcon = forwardRef(function RefreshIcon2(props, ref) {
+  return /* @__PURE__ */jsxs("svg", {
+    "data-sanity-icon": "refresh",
+    width: "1em",
+    height: "1em",
+    viewBox: "0 0 25 25",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    ref,
+    ...props,
+    children: [/* @__PURE__ */jsx("path", {
+      d: "M19.5 13.5C19.5 17.366 16.366 20.5 12.5 20.5C8.63401 20.5 5.5 17.366 5.5 13.5C5.5 9.63401 8.63401 6.5 12.5 6.5H15.5",
+      stroke: "currentColor",
+      strokeWidth: 1.2,
+      strokeLinejoin: "round"
+    }), /* @__PURE__ */jsx("path", {
+      d: "M11.5 10.5L15.5 6.5L11.5 2.5",
+      stroke: "currentColor",
+      strokeWidth: 1.2,
+      strokeLinejoin: "round"
+    })]
+  });
+});
 const RemoveCircleIcon = forwardRef(function RemoveCircleIcon2(props, ref) {
   return /* @__PURE__ */jsx("svg", {
     "data-sanity-icon": "remove-circle",
@@ -2741,12 +2864,12 @@ const RetryIcon = forwardRef(function RetryIcon2(props, ref) {
     ref,
     ...props,
     children: [/* @__PURE__ */jsx("path", {
-      d: "M20 9L10 9C7.51472 9 5.5 11.0147 5.5 13.5C5.5 15.9853 7.51472 18 10 18H20",
+      d: "M19 9.5L10 9.5C7.51472 9.5 5.5 11.5147 5.5 14C5.5 16.4853 7.51472 18.5 10 18.5H19",
       stroke: "currentColor",
       strokeWidth: 1.2,
       strokeLinejoin: "round"
     }), /* @__PURE__ */jsx("path", {
-      d: "M16 13L20 9L16 5",
+      d: "M15 13.5L19 9.5L15 5.5",
       stroke: "currentColor",
       strokeWidth: 1.2,
       strokeLinejoin: "round"
@@ -2764,12 +2887,12 @@ const RevertIcon = forwardRef(function RevertIcon2(props, ref) {
     ref,
     ...props,
     children: [/* @__PURE__ */jsx("path", {
-      d: "M5 9L15 9C17.4853 9 19.5 11.0147 19.5 13.5C19.5 15.9853 17.4853 18 15 18H5",
+      d: "M6 9.5L15 9.5C17.4853 9.5 19.5 11.5147 19.5 14C19.5 16.4853 17.4853 18.5 15 18.5H6",
       stroke: "currentColor",
       strokeWidth: 1.2,
       strokeLinejoin: "round"
     }), /* @__PURE__ */jsx("path", {
-      d: "M9 13L5 9L9 5",
+      d: "M10 13.5L6 9.5L10 5.5",
       stroke: "currentColor",
       strokeWidth: 1.2,
       strokeLinejoin: "round"
@@ -3182,6 +3305,29 @@ const SyncIcon = forwardRef(function SyncIcon2(props, ref) {
     })]
   });
 });
+const TabletDeviceIcon = forwardRef(function TabletDeviceIcon2(props, ref) {
+  return /* @__PURE__ */jsxs("svg", {
+    "data-sanity-icon": "tablet-device",
+    width: "1em",
+    height: "1em",
+    viewBox: "0 0 25 25",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    ref,
+    ...props,
+    children: [/* @__PURE__ */jsx("path", {
+      d: "M5.5 5.5C5.5 4.94772 5.94772 4.5 6.5 4.5H18.5C19.0523 4.5 19.5 4.94772 19.5 5.5V19.5C19.5 20.0523 19.0523 20.5 18.5 20.5H6.5C5.94772 20.5 5.5 20.0523 5.5 19.5V5.5Z",
+      stroke: "currentColor",
+      strokeWidth: 1.2,
+      strokeLinejoin: "round"
+    }), /* @__PURE__ */jsx("path", {
+      d: "M13 18C13 18.2761 12.7761 18.5 12.5 18.5C12.2239 18.5 12 18.2761 12 18C12 17.7239 12.2239 17.5 12.5 17.5C12.7761 17.5 13 17.7239 13 18Z",
+      stroke: "currentColor",
+      strokeWidth: 1.2,
+      strokeLinejoin: "round"
+    })]
+  });
+});
 const TagIcon$1 = forwardRef(function TagIcon2(props, ref) {
   return /* @__PURE__ */jsxs("svg", {
     "data-sanity-icon": "tag",
@@ -3235,6 +3381,24 @@ const TerminalIcon = forwardRef(function TerminalIcon2(props, ref) {
     ...props,
     children: /* @__PURE__ */jsx("path", {
       d: "M8.5 9.5L11.5 12.5L8.5 15.5M13 15.5H17M5.5 6.5H19.5V18.5H5.5V6.5Z",
+      stroke: "currentColor",
+      strokeWidth: 1.2,
+      strokeLinejoin: "round"
+    })
+  });
+});
+const TextIcon = forwardRef(function TextIcon2(props, ref) {
+  return /* @__PURE__ */jsx("svg", {
+    "data-sanity-icon": "text",
+    width: "1em",
+    height: "1em",
+    viewBox: "0 0 25 25",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    ref,
+    ...props,
+    children: /* @__PURE__ */jsx("path", {
+      d: "M7.5 9V6.5H17.5V9M12.5 18.5V6.5M10 18.5H15",
       stroke: "currentColor",
       strokeWidth: 1.2,
       strokeLinejoin: "round"
@@ -3782,6 +3946,7 @@ const icons = {
   copy: CopyIcon,
   "credit-card": CreditCardIcon,
   crop: CropIcon,
+  cube: CubeIcon,
   dashboard: DashboardIcon,
   database: DatabaseIcon,
   desktop: DesktopIcon,
@@ -3836,6 +4001,7 @@ const icons = {
   "insert-below": InsertBelowIcon,
   italic: ItalicIcon,
   joystick: JoystickIcon,
+  json: JsonIcon,
   launch: LaunchIcon,
   leave: LeaveIcon,
   lemon: LemonIcon,
@@ -3853,6 +4019,8 @@ const icons = {
   olist: OlistIcon,
   overage: OverageIcon,
   package: PackageIcon,
+  "panel-left": PanelLeftIcon,
+  "panel-right": PanelRightIcon,
   pause: PauseIcon,
   pin: PinIcon,
   "pin-removed": PinRemovedIcon,
@@ -3861,6 +4029,8 @@ const icons = {
   presentation: PresentationIcon,
   publish: PublishIcon,
   "read-only": ReadOnlyIcon,
+  redo: RedoIcon,
+  refresh: RefreshIcon,
   "remove-circle": RemoveCircleIcon,
   remove: RemoveIcon,
   reset: ResetIcon,
@@ -3889,9 +4059,11 @@ const icons = {
   string: StringIcon,
   sun: SunIcon,
   sync: SyncIcon,
+  "tablet-device": TabletDeviceIcon,
   tag: TagIcon$1,
   tags: TagsIcon,
   terminal: TerminalIcon,
+  text: TextIcon,
   "th-large": ThLargeIcon,
   "th-list": ThListIcon,
   tiers: TiersIcon,
@@ -4262,6 +4434,7 @@ const TAG_DOCUMENT_NAME = "media.tag";
 const TAGS_PANEL_WIDTH = 250;
 const SEASONS_DOCUMENT_NAME = "seasons";
 const COLLABORATION_DOCUMENT_NAME = "collaborations";
+const CURRENT_SEASON_DOCUMENT_NAME = "currentseason";
 const AssetSourceDispatchContext = createContext(void 0);
 const AssetBrowserDispatchProvider = props => {
   const {
@@ -5829,7 +6002,10 @@ const seasonsSlice = createSlice({
         _type: "seasonItem",
         error: void 0,
         picked: false,
-        season,
+        season: {
+          ...season,
+          isCurrentSeason: false
+        },
         updating: false
       };
     },
@@ -5846,7 +6022,7 @@ const seasonsSlice = createSlice({
         delete state.fetchingError;
       },
       prepare: () => {
-        const query = groq(_a$k || (_a$k = __template$k(['\n          {\n            "items": *[\n              _type == "', '"\n              && !(_id in path("drafts.**"))\n            ] {\n              _createdAt,\n              _updatedAt,\n              _id,\n              _rev,\n              _type,\n              name\n            } | order(name.current asc),\n          }\n        '])), SEASONS_DOCUMENT_NAME);
+        const query = groq(_a$k || (_a$k = __template$k(['\n          {\n            "items": *[\n              _type == "', '"\n              && !(_id in path("drafts.**"))\n            ] {\n              _createdAt,\n              _updatedAt,\n              _id,\n              _rev,\n              _type,\n              name\n            } | order(name.current asc),\n\n            "currentSeason": *[\n              _type == "', '"\n              && !(_id in path("drafts.**"))\n            ] {\n              _id,\n              _type,\n              name,\n              currentseason{\n                seasons->\n              }\n            }\n          }\n        '])), SEASONS_DOCUMENT_NAME, CURRENT_SEASON_DOCUMENT_NAME);
         return {
           payload: {
             query
@@ -5857,13 +6033,19 @@ const seasonsSlice = createSlice({
     fetchComplete(state, action) {
       state.fetching = false;
       state.fetchingError = void 0;
-      const seasons = action.payload.seasons;
+      const {
+        seasons,
+        currentSeaon
+      } = action.payload;
       state.byIds = action.payload.seasons.reduce((acc, season) => {
         acc[season._id] = {
           _type: "seasonItem",
           error: void 0,
           picked: false,
-          season,
+          season: {
+            ...season,
+            isCurrentSeason: currentSeaon._id === season._id
+          },
           updating: false
         };
         return acc;
@@ -5873,7 +6055,10 @@ const seasonsSlice = createSlice({
         state.byIds[season._id] = {
           _type: "seasonItem",
           picked: false,
-          season,
+          season: {
+            ...season,
+            isCurrentSeason: currentSeaon._id === season._id
+          },
           updating: false
         };
       });
@@ -5984,10 +6169,12 @@ const seasonsFetchEpic = (action$, state$, _ref44) => {
     // Dispatch complete action
     mergeMap(result => {
       const {
-        items
+        items,
+        currentSeason
       } = result;
       return of(seasonsSlice.actions.fetchComplete({
-        seasons: items
+        seasons: items,
+        currentSeaon: currentSeason[0].currentseason.seasons
       }));
     }), catchError(error => of(seasonsSlice.actions.fetchError({
       error: {
@@ -6011,7 +6198,8 @@ const seasonsCreateEpic = (action$, state$, _ref46) => {
       name: {
         _type: "slug",
         current: name
-      }
+      },
+      isCurrentSeason: false
     })), mergeMap(result => of(seasonsSlice.actions.createComplete({
       season: result
     }))), catchError(error => of(seasonsSlice.actions.createError({
@@ -6108,13 +6296,14 @@ const selectSeasonsByIds = state => state.seasons.byIds;
 const selectSeasonById = createSelector([selectSeasonsByIds, (_state, seasonId) => seasonId], (byIds, seasonId) => byIds[seasonId]);
 const selectSeasons = createSelector(selectSeasonsByIds, byIds => Object.values(byIds));
 const selectInitialSelectedSeasons = asset => createSelector(selectSeasons, seasons => {
-  var _a2, _b2, _c, _d, _e, _f, _g, _h, _i, _j, _k;
+  var _a2, _b2, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l;
   const selectedCollaboration = (_c = (_a2 = asset == null ? void 0 : asset.season) == null ? void 0 : _a2._ref) != null ? _c : (_b2 = asset == null ? void 0 : asset.season) == null ? void 0 : _b2._id;
   const season = seasons.find(seasonItem => seasonItem.season._id === selectedCollaboration);
   if (((_e = (_d = season == null ? void 0 : season.season) == null ? void 0 : _d.name) == null ? void 0 : _e.current) && ((_f = season == null ? void 0 : season.season) == null ? void 0 : _f._id)) {
     return {
       label: (_i = (_h = (_g = season == null ? void 0 : season.season) == null ? void 0 : _g.name) == null ? void 0 : _h.current) != null ? _i : "",
-      value: (_k = (_j = season == null ? void 0 : season.season) == null ? void 0 : _j._id) != null ? _k : ""
+      value: (_k = (_j = season == null ? void 0 : season.season) == null ? void 0 : _j._id) != null ? _k : "",
+      isCurrentSeason: (_l = season == null ? void 0 : season.season) == null ? void 0 : _l.isCurrentSeason
     };
   }
   return null;
@@ -9809,7 +9998,8 @@ const DialogAssetEdit = props => {
         season: ((_b = sanitizedFormData == null ? void 0 : sanitizedFormData.season) == null ? void 0 : _b.value) ? {
           _ref: sanitizedFormData.season.value,
           _type: "reference",
-          _weak: true
+          _weak: true,
+          isCurrentSeason: sanitizedFormData.season.isCurrentSeason
         } : null,
         // Map tags to sanity references
         opt: {
@@ -10873,7 +11063,8 @@ const DialogMassAssetEdit = props => {
         season: {
           _ref: sanitizedFormData.season.value,
           _type: "reference",
-          _weak: true
+          _weak: true,
+          isCurrentSeason: sanitizedFormData.season.isCurrentSeason
         },
         // Map tags to sanity references
         opt: {
@@ -14662,6 +14853,11 @@ var mediaSeason = {
     title: "Name",
     name: "name",
     type: "slug"
+  }, {
+    title: "Current Season",
+    type: "boolean",
+    name: "isCurrentSeason",
+    description: "Set to true to set this as current season"
   }],
   preview: {
     select: {
@@ -14674,6 +14870,33 @@ var mediaSeason = {
       return {
         media: TagIcon,
         title: name == null ? void 0 : name.current
+      };
+    }
+  }
+};
+var mediaCurrentSeason = {
+  title: "Current Season",
+  icon: TagIcon,
+  name: CURRENT_SEASON_DOCUMENT_NAME,
+  type: "document",
+  fields: [{
+    name: "currentseason",
+    type: "object",
+    title: "Select Current Season",
+    fields: [{
+      title: "Season",
+      name: "seasons",
+      type: "reference",
+      to: [{
+        type: "seasons"
+      }]
+    }]
+  }],
+  preview: {
+    prepare() {
+      return {
+        media: TagIcon,
+        title: "Current Season"
       };
     }
   }
@@ -14716,6 +14939,7 @@ const tool = {
   ...plugin,
   component: Tool
 };
+const singletonTypes = /* @__PURE__ */new Set(["currentseason"]);
 const media = definePlugin({
   name: "media",
   form: {
@@ -14731,7 +14955,13 @@ const media = definePlugin({
     }
   },
   schema: {
-    types: [mediaTag, mediaSeason, mediaCollaboration]
+    types: [mediaTag, mediaSeason, mediaCurrentSeason, mediaCollaboration],
+    templates: templates => templates.filter(_ref102 => {
+      let {
+        schemaType
+      } = _ref102;
+      return !singletonTypes.has(schemaType);
+    })
   },
   tools: prev => {
     return [...prev, tool];

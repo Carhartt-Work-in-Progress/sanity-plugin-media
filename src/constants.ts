@@ -74,3 +74,4 @@ export const TAG_DOCUMENT_NAME = 'media.tag'
 export const TAGS_PANEL_WIDTH = 250 // px
 export const SEASONS_DOCUMENT_NAME = 'seasons'
 export const COLLABORATION_DOCUMENT_NAME = 'collaborations'
+export const CURRENT_SEASON_DOCUMENT_NAME = 'currentseason'

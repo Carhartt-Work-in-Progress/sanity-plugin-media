@@ -114,7 +114,8 @@ const DialogMassAssetEdit = (props: Props) => {
             season: {
               _ref: sanitizedFormData.season.value,
               _type: 'reference',
-              _weak: true
+              _weak: true,
+              isCurrentSeason: sanitizedFormData.season.isCurrentSeason
             },
             // Map tags to sanity references
             opt: {

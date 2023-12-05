@@ -5,6 +5,7 @@ import FormBuilderTool from './components/FormBuilderTool'
 import Tool from './components/Tool'
 import mediaTag from './schemas/tag'
 import mediaSeason from './schemas/season'
+import mediaCurrentSeason from './schemas/currentSeason'
 import mediaCollaboration from './schemas/collaborations'
 
 const plugin = {
@@ -23,6 +24,8 @@ const tool = {
   component: Tool
 } as SanityTool
 
+const singletonTypes = new Set(['currentseason'])
+
 export const media = definePlugin({
   name: 'media',
   form: {
@@ -38,7 +41,8 @@ export const media = definePlugin({
     }
   },
   schema: {
-    types: [mediaTag, mediaSeason, mediaCollaboration]
+    types: [mediaTag, mediaSeason, mediaCurrentSeason, mediaCollaboration],
+    templates: templates => templates.filter(({schemaType}) => !singletonTypes.has(schemaType))
   },
   tools: prev => {
     return [...prev, tool]

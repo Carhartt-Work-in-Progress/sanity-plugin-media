@@ -11,6 +11,12 @@ export default {
       title: 'Name',
       name: 'name',
       type: 'slug'
+    },
+    {
+      title: 'Current Season',
+      type: 'boolean',
+      name: 'isCurrentSeason',
+      description: 'Set to true to set this as current season'
     }
   ],
   preview: {
