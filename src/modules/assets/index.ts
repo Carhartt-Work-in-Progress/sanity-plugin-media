@@ -75,7 +75,7 @@ const defaultOrder = ORDER_OPTIONS[0] as {
 
 export const initialState = {
   allIds: [],
-  assetTypes: [],
+  assetTypes: ['image', 'file'],
   byIds: {},
   fetchCount: -1,
   fetching: false,

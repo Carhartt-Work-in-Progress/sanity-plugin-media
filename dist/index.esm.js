@@ -5180,7 +5180,7 @@ var _a$m, _b$c, _c$2, _d$1, _e;
 const defaultOrder = ORDER_OPTIONS[0];
 const initialState$7 = {
   allIds: [],
-  assetTypes: [],
+  assetTypes: ["image", "file"],
   byIds: {},
   fetchCount: -1,
   fetching: false,
