@@ -208,6 +208,7 @@ const DialogAssetEdit = (props: Props) => {
             opt: {
               media: {
                 ...sanitizedFormData.opt.media,
+                title: sanitizedFormData?.title ?? sanitizeFormData?.name ?? '',
                 tags:
                   sanitizedFormData.opt.media.tags?.map((tag: TagSelectOption) => ({
                     _ref: tag.value,

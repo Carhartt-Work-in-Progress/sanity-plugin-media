@@ -60,6 +60,7 @@
   "dependencies": {
     "@commercetools/platform-sdk": "^6.0.0",
     "@hookform/resolvers": "^3.1.1",
+    "@mux/upchunk": "^3.3.0",
     "@reduxjs/toolkit": "^1.9.0",
     "@sanity/incompatible-plugin": "^1.0.4",
     "@sanity/ui": "^1.7.0",
