@@ -108,7 +108,6 @@ const DialogAssetEdit = (props: Props) => {
     resolver: zodResolver(assetFormSchema)
   })
 
-  console.log(errors, isValid, 'validation errors')
   const currentValues = getValues()
 
   const formUpdating = !assetItem || assetItem?.updating

@@ -150,27 +150,30 @@ export const uploadsAssetStartEpic: MyEpic = (action$, _state$, {client}) =>
                   mp4_support: 'standard',
                   tool: false
                 },
+                //@ts-expect-error
                 client,
                 file,
-                {enableSignedUrls: true}
+                {enableSignedUrls: true},
+                event
               ).pipe(
                 mergeMap(result => {
                   // Process the result if needed
-                  console.log('UploadFile result:', result)
-
+                  if (result?.type === 'success') {
+                    return of(
+                      UPLOADS_ACTIONS.uploadComplete({
+                        asset: event.asset
+                      })
+                    )
+                  }
                   // Return relevant actions or empty() if not needed
-                  return of()
+                  return empty()
                 }),
                 catchError(error => {
                   // Handle the error if needed
                   console.error('UploadFile error:', error)
 
                   // Return relevant error actions or empty() if not needed
-                  return of(
-                    UPLOADS_ACTIONS.uploadComplete({
-                      asset: event.asset
-                    })
-                  )
+                  return empty()
                 })
               )
 
@@ -185,6 +188,11 @@ export const uploadsAssetStartEpic: MyEpic = (action$, _state$, {client}) =>
               )
             }
             return empty()
+            // return of(
+            //   UPLOADS_ACTIONS.uploadComplete({
+            //     asset: event.asset
+            //   })
+            // )
           }),
           catchError((error: ClientError) =>
             of(

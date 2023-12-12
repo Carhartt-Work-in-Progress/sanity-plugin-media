@@ -45,8 +45,7 @@ export function createSigningKeys(client: SanityClient) {
 
 export function testSecrets(client: SanityClient) {
   const {dataset} = client.config()
-  console.log(dataset);
-  
+
   return client.request<{status: boolean}>({
     url: `/addons/mux/secrets/${dataset}/test`,
     withCredentials: true,

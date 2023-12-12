@@ -1,5 +1,5 @@
 /* eslint-disable consistent-return */
-import {useCallback, useEffect} from 'react'
+import {useEffect} from 'react'
 import type {SanityClient} from 'sanity'
 
 import {createSigningKeys, haveValidSigningKeys, saveSecrets, testSecrets} from './secrets'
@@ -8,8 +8,6 @@ import {useSecretsDocumentValues} from './useSecretsDocumentValue'
 
 export const useSaveSecrets = (client: SanityClient, secrets: Secrets) => {
   const {isLoading, value} = useSecretsDocumentValues()
-
-  console.log('useSaveSecrets', value)
   const saveTokens = async ({
     token,
     secretKey,
@@ -27,10 +25,8 @@ export const useSaveSecrets = (client: SanityClient, secrets: Secrets) => {
         signingKeyId!,
         signingKeyPrivate!
       )
-      console.log('before test secrets');
-      
+
       const valid = await testSecrets(client)
-      console.log('valid', valid);
       if (!valid?.status && token && secretKey) {
         throw new Error('Invalid secrets')
       }

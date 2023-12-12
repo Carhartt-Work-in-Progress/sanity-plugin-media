@@ -1,3 +1,4 @@
+/* eslint-disable max-nested-callbacks */
 /* eslint-disable camelcase */
 import {uuid as generateUuid} from '@sanity/uuid'
 import {concat, defer, from, of, throwError} from 'rxjs'
@@ -5,13 +6,7 @@ import type {SanityClient} from 'sanity'
 import {catchError, mergeMap, mergeMapTo, switchMap} from 'rxjs/operators'
 import {createUpChunkObservable} from './upChunkObservable'
 import {Config, MuxAsset} from './types'
-import { testSecretsObservable } from './secrets'
-
-const hardcodedSecrets = of({
-  // Hardcoded secrets or credentials
-  status: 'success'
-  // ... other secret properties
-})
+import {testSecretsObservable} from './secrets'
 
 function optionsFromFile(opts: {preserveFilename?: boolean}, file: File) {
   if (typeof window === 'undefined' || !(file instanceof window.File)) {
@@ -101,7 +96,11 @@ export function cancelUpload(client: SanityClient, uuid: string) {
   })
 }
 
-async function updateAssetDocumentFromUpload(client: SanityClient, uuid: string) {
+async function updateAssetDocumentFromUpload(
+  client: SanityClient,
+  uuid: string,
+  sanityEvent: {id: string}
+) {
   let upload: UploadResponse
   let asset: {data: MuxAsset}
   try {
@@ -115,36 +114,31 @@ async function updateAssetDocumentFromUpload(client: SanityClient, uuid: string)
     return Promise.reject(err)
   }
 
-  const doc = {
-    _id: uuid,
-    _type: 'mux.videoAsset',
+  const muxData = {
+    ...asset,
     status: asset.data.status,
     data: asset.data,
     assetId: asset.data.id,
     playbackId: asset.data.playback_ids[0].id,
     uploadId: upload.data.id
   }
-  return client.createOrReplace(doc).then(() => {
-    return doc
-  })
+
+  return client.patch(sanityEvent.id).setIfMissing({muxData}).commit()
 }
 
 export function uploadFileToMux(
   config: Config,
   client: SanityClient,
   file: File,
-  options: {enableSignedUrls?: boolean} = {}
+  options: {enableSignedUrls?: boolean} = {},
+  sanityEvent: {id: string}
 ) {
-    console.log('called');
-    
   return testFile(file).pipe(
     switchMap(fileOptions => {
       return concat(
         of({type: 'file', file: fileOptions}),
         testSecretsObservable(client).pipe(
           switchMap(json => {
-            console.log('json', json);
-            
             if (!json || !json.status) {
               return throwError(new Error('Invalid credentials'))
             }
@@ -184,8 +178,6 @@ export function uploadFileToMux(
                 })
               ).pipe(
                 mergeMap(result => {
-                    console.log('result', result);
-                    
                   return createUpChunkObservable(uuid, result.upload.url, file).pipe(
                     // eslint-disable-next-line no-warning-comments
                     // @TODO type the observable events
@@ -194,9 +186,11 @@ export function uploadFileToMux(
                       if (event.type !== 'success') {
                         return of(event)
                       }
-                      return from(updateAssetDocumentFromUpload(client, uuid)).pipe(
+                      return from(updateAssetDocumentFromUpload(client, uuid, sanityEvent)).pipe(
                         // eslint-disable-next-line max-nested-callbacks
-                        mergeMap(doc => of({...event, asset: doc}))
+                        mergeMap(doc => {
+                          return of({...event, asset: doc})
+                        })
                       )
                     }),
                     // eslint-disable-next-line max-nested-callbacks
