@@ -1,4 +1,4 @@
-import { useClient, useColorScheme, useSchema, Preview, useColorSchemeValue, useDocumentStore, WithReferringDocuments, useFormValue, definePlugin } from 'sanity';
+import { useClient, useColorScheme, useSchema, Preview, useColorSchemeValue, useDocumentStore, WithReferringDocuments, useDocumentValues, useFormValue, definePlugin } from 'sanity';
 import { forwardRef, createElement, useRef, useCallback, useEffect, createContext, useContext, useState, useMemo, memo, Component } from 'react';
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
 import { Inline, Button, usePortal, MenuButton, Menu as Menu$2, MenuItem, MenuDivider, Box, studioTheme, rem, Flex, Label, Text, TextInput, Card, MenuGroup, useMediaIndex, Tooltip, Switch, Popover, Stack, Dialog as Dialog$1, TextArea, Autocomplete, TabList, Tab, TabPanel, Container as Container$2, Spinner, Checkbox, Grid, useToast, ThemeProvider, ToastProvider, PortalProvider, useLayer, Portal } from '@sanity/ui';
@@ -8,8 +8,8 @@ import { useSelector, useDispatch, Provider } from 'react-redux';
 import { createAction, createSlice, createSelector, combineReducers, configureStore } from '@reduxjs/toolkit';
 import { nanoid } from 'nanoid';
 import { ofType, combineEpics, createEpicMiddleware } from 'redux-observable';
-import { iif, throwError, of, from, empty, merge, Subject, Observable } from 'rxjs';
-import { delay, mergeMap, filter, withLatestFrom, catchError, switchMap, bufferTime, debounceTime, first, map, takeUntil } from 'rxjs/operators';
+import { iif, throwError, of, from, empty, forkJoin, merge, Subject, Observable, defer, concat } from 'rxjs';
+import { delay, mergeMap, filter, withLatestFrom, catchError, switchMap, bufferTime, debounceTime, first, map, mergeMapTo, takeUntil } from 'rxjs/operators';
 import { uuid } from '@sanity/uuid';
 import styled, { css, createGlobalStyle } from 'styled-components';
 import pluralize from 'pluralize';
@@ -26,6 +26,7 @@ import { useIntentLink } from 'sanity/router';
 import { FileIcon as FileIcon$1, defaultStyles } from 'react-file-icon';
 import CreatableSelect from 'react-select/creatable';
 import { useDebounce } from 'usehooks-ts';
+import { UpChunk } from '@mux/upchunk';
 import formatRelative from 'date-fns/formatRelative';
 import { useDropzone } from 'react-dropzone';
 const AccessDeniedIcon = forwardRef(function AccessDeniedIcon2(props, ref) {
@@ -5336,7 +5337,7 @@ const assetsSlice = createSlice({
           sort = groq(_a$m || (_a$m = __template$m(["order(_updatedAt desc)"])))
         } = _ref25;
         const pipe = sort || selector ? "|" : "";
-        const query = groq(_b$c || (_b$c = __template$m(['\n          {\n            "items": *[', "] {\n              _id,\n              _type,\n              _createdAt,\n              _updatedAt,\n              altText,\n              description,\n              extension,\n              metadata {\n                dimensions,\n                exif,\n                isOpaque,\n              },\n              mimeType,\n              opt {\n                media\n              },\n              originalFilename,\n              size,\n              title,\n              products,\n              primaryProducts,\n              secondaryProducts,  \n              collaboration, \n              season,\n              name,\n              url\n            } ", " ", " ", ",\n          }\n        "])), queryFilter, pipe, sort, selector);
+        const query = groq(_b$c || (_b$c = __template$m(['\n          {\n            "items": *[', "] {\n              _id,\n              _type,\n              _createdAt,\n              _updatedAt,\n              altText,\n              description,\n              extension,\n              metadata {\n                dimensions,\n                exif,\n                isOpaque,\n              },\n              mimeType,\n              opt {\n                media\n              },\n              muxData{\n                assetId,\n                playbackId,\n                uploadId,\n                data {\n                  aspect_ratio,\n                  max_resolution_tier,\n                },\n              },\n              originalFilename,\n              size,\n              title,\n              products,\n              primaryProducts,\n              secondaryProducts,  \n              collaboration, \n              season,\n              name,\n              url\n            } ", " ", " ", ",\n          }\n        "])), queryFilter, pipe, sort, selector);
         return {
           payload: {
             params,
@@ -5484,8 +5485,15 @@ const assetsDeleteEpic = (action$, _state$, _ref27) => {
     const {
       assets
     } = action.payload;
+    const {
+      dataset
+    } = client.config();
     const assetIds = assets.map(asset => asset._id);
-    return of(assets).pipe(mergeMap(() => client.observable.delete({
+    const muxIds = assets.map(asset => {
+      var _a2;
+      return (_a2 = asset == null ? void 0 : asset.muxData) == null ? void 0 : _a2.assetId;
+    }).filter(Boolean);
+    const sanityDeleteByIds = of(assets).pipe(mergeMap(() => client.observable.delete({
       query: groq(_c$2 || (_c$2 = __template$m(["*[_id in ", "]"])), JSON.stringify(assetIds))
     })), mergeMap(() => of(assetsActions.deleteComplete({
       assetIds
@@ -5495,6 +5503,20 @@ const assetsDeleteEpic = (action$, _state$, _ref27) => {
         error
       }));
     }));
+    const deleteByMuxId$ = from(muxIds).pipe(mergeMap(muxId => of(client.request({
+      url: "/addons/mux/assets/".concat(dataset, "/").concat(muxId),
+      withCredentials: true,
+      method: "DELETE"
+    })).pipe(catchError(error => of(assetsActions.deleteError({
+      assetIds,
+      error
+    }))))));
+    return forkJoin([sanityDeleteByIds, deleteByMuxId$]).pipe(mergeMap(() => of(assetsActions.deleteComplete({
+      assetIds
+    }))), catchError(error => of(assetsActions.deleteError({
+      assetIds,
+      error
+    }))));
   }));
 };
 const assetsFetchEpic = (action$, state$, _ref28) => {
@@ -8206,7 +8228,6 @@ const TextInputSearch = () => {
         zIndex: 1
         // force stacking context
       },
-
       children: /* @__PURE__ */jsx(CloseIcon, {})
     })]
   });
@@ -9747,7 +9768,6 @@ const DialogAssetEdit = props => {
     mode: "onChange",
     resolver: zodResolver(assetFormSchema)
   });
-  console.log(errors, isValid, "validation errors");
   const currentValues = getValues();
   const formUpdating = !assetItem || (assetItem == null ? void 0 : assetItem.updating);
   const handleClose = useCallback(() => {
@@ -9791,7 +9811,7 @@ const DialogAssetEdit = props => {
     }));
   }, [dispatch]);
   const onSubmit = useCallback(formData => {
-    var _a3, _b, _c;
+    var _a3, _b, _c, _d, _e, _f;
     if (!(assetItem == null ? void 0 : assetItem.asset)) {
       return;
     }
@@ -9815,7 +9835,8 @@ const DialogAssetEdit = props => {
         opt: {
           media: {
             ...sanitizedFormData.opt.media,
-            tags: ((_c = sanitizedFormData.opt.media.tags) == null ? void 0 : _c.map(tag => ({
+            title: (_e = (_d = sanitizedFormData == null ? void 0 : sanitizedFormData.title) != null ? _d : (_c = sanitizeFormData) == null ? void 0 : _c.name) != null ? _e : "",
+            tags: ((_f = sanitizedFormData.opt.media.tags) == null ? void 0 : _f.map(tag => ({
               _ref: tag.value,
               _type: "reference",
               _weak: true
@@ -10789,7 +10810,6 @@ const DialogTags = props => {
         minHeight: "420px"
         // explicit height required as <TagView> is virtualized
       },
-
       children: /* @__PURE__ */jsx(TagView, {})
     }), children]
   });
@@ -12150,6 +12170,263 @@ const uploadSanityAsset$ = (client, assetType, file, hash) => {
   }));
 };
 const uploadAsset$ = withMaxConcurrency(uploadSanityAsset$);
+function createUpChunkObservable(uuid, uploadUrl, source) {
+  return new Observable(subscriber => {
+    const upchunk = UpChunk.createUpload({
+      endpoint: uploadUrl,
+      file: source,
+      dynamicChunkSize: true
+      // changes the chunk size based on network speeds
+    });
+    const successHandler = () => {
+      subscriber.next({
+        type: "success",
+        id: uuid
+      });
+      subscriber.complete();
+    };
+    const errorHandler = data => subscriber.error(new Error(data.detail.message));
+    const progressHandler = data => {
+      return subscriber.next({
+        type: "progress",
+        percent: data.detail
+      });
+    };
+    const offlineHandler = () => {
+      upchunk.pause();
+      subscriber.next({
+        type: "pause",
+        id: uuid
+      });
+    };
+    const onlineHandler = () => {
+      upchunk.resume();
+      subscriber.next({
+        type: "resume",
+        id: uuid
+      });
+    };
+    upchunk.on("success", successHandler);
+    upchunk.on("error", errorHandler);
+    upchunk.on("progress", progressHandler);
+    upchunk.on("offline", offlineHandler);
+    upchunk.on("online", onlineHandler);
+    return () => upchunk.abort();
+  });
+}
+function saveSecrets(client, token, secretKey, enableSignedUrls, signingKeyId, signingKeyPrivate) {
+  const doc = {
+    _id: "secrets.mux",
+    _type: "mux.apiKey",
+    token,
+    secretKey,
+    enableSignedUrls,
+    signingKeyId,
+    signingKeyPrivate
+  };
+  return client.createOrReplace(doc);
+}
+function createSigningKeys(client) {
+  const {
+    dataset
+  } = client.config();
+  return client.request({
+    url: "/addons/mux/signing-keys/".concat(dataset),
+    withCredentials: true,
+    method: "POST"
+  });
+}
+function testSecrets(client) {
+  const {
+    dataset
+  } = client.config();
+  return client.request({
+    url: "/addons/mux/secrets/".concat(dataset, "/test"),
+    withCredentials: true,
+    method: "GET"
+  });
+}
+async function haveValidSigningKeys(client, signingKeyId, signingKeyPrivate) {
+  if (!(signingKeyId && signingKeyPrivate)) {
+    return false;
+  }
+  const {
+    dataset
+  } = client.config();
+  try {
+    const res = await client.request({
+      url: "/addons/mux/signing-keys/".concat(dataset, "/").concat(signingKeyId),
+      withCredentials: true,
+      method: "GET"
+    });
+    return !!(res.data && res.data.id);
+  } catch (e) {
+    console.error("Error fetching signingKeyId", signingKeyId, "assuming it is not valid");
+    return false;
+  }
+}
+function testSecretsObservable(client) {
+  const {
+    dataset
+  } = client.config();
+  return defer(() => client.observable.request({
+    url: "/addons/mux/secrets/".concat(dataset, "/test"),
+    withCredentials: true,
+    method: "GET"
+  }));
+}
+function optionsFromFile(opts, file) {
+  if (typeof window === "undefined" || !(file instanceof window.File)) {
+    return opts;
+  }
+  return {
+    name: opts.preserveFilename === false ? void 0 : file.name,
+    type: file.type
+  };
+}
+function testFile(file) {
+  if (typeof window !== "undefined" && file instanceof window.File) {
+    const fileOptions = optionsFromFile({}, file);
+    return of(fileOptions);
+  }
+  return throwError(new Error("Invalid file"));
+}
+function getUpload(client, assetId) {
+  const {
+    dataset
+  } = client.config();
+  return client.request({
+    url: "/addons/mux/uploads/".concat(dataset, "/").concat(assetId),
+    withCredentials: true,
+    method: "GET"
+  });
+}
+function pollUpload(client, uuid) {
+  const maxTries = 10;
+  let pollInterval;
+  let tries = 0;
+  let assetId;
+  let upload;
+  return new Promise((resolve, reject) => {
+    pollInterval = setInterval(async () => {
+      try {
+        upload = await getUpload(client, uuid);
+      } catch (err) {
+        reject(err);
+        return;
+      }
+      assetId = upload && upload.data && upload.data.asset_id;
+      if (assetId) {
+        clearInterval(pollInterval);
+        resolve(upload);
+      }
+      if (tries > maxTries) {
+        clearInterval(pollInterval);
+        reject(new Error("Upload did not finish"));
+      }
+      tries++;
+    }, 2e3);
+  });
+}
+function getAsset(client, assetId) {
+  const {
+    dataset
+  } = client.config();
+  return client.request({
+    url: "/addons/mux/assets/".concat(dataset, "/data/").concat(assetId),
+    withCredentials: true,
+    method: "GET"
+  });
+}
+function cancelUpload(client, uuid) {
+  return client.observable.request({
+    url: "/addons/mux/uploads/".concat(client.config().dataset, "/").concat(uuid),
+    withCredentials: true,
+    method: "DELETE"
+  });
+}
+async function updateAssetDocumentFromUpload(client, uuid, sanityEvent) {
+  let upload;
+  let asset;
+  try {
+    upload = await pollUpload(client, uuid);
+  } catch (err) {
+    return Promise.reject(err);
+  }
+  try {
+    asset = await getAsset(client, upload.data.asset_id);
+  } catch (err) {
+    return Promise.reject(err);
+  }
+  const muxData = {
+    ...asset,
+    status: asset.data.status,
+    data: asset.data,
+    assetId: asset.data.id,
+    playbackId: asset.data.playback_ids[0].id,
+    uploadId: upload.data.id
+  };
+  return client.patch(sanityEvent.id).setIfMissing({
+    muxData
+  }).commit();
+}
+function uploadFileToMux(config, client, file) {
+  let options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+  let sanityEvent = arguments.length > 4 ? arguments[4] : undefined;
+  return testFile(file).pipe(switchMap(fileOptions => {
+    return concat(of({
+      type: "file",
+      file: fileOptions
+    }), testSecretsObservable(client).pipe(switchMap(json => {
+      if (!json || !json.status) {
+        return throwError(new Error("Invalid credentials"));
+      }
+      const uuid$1 = uuid();
+      const {
+        enableSignedUrls
+      } = options;
+      const body = {
+        mp4_support: config.mp4_support,
+        playback_policy: [enableSignedUrls ? "signed" : "public"]
+      };
+      return concat(of({
+        type: "uuid",
+        uuid: uuid$1
+      }), defer(() => client.observable.request({
+        url: "/addons/mux/uploads/".concat(client.config().dataset),
+        withCredentials: true,
+        method: "POST",
+        headers: {
+          "MUX-Proxy-UUID": uuid$1,
+          "Content-Type": "application/json"
+        },
+        body
+      })).pipe(mergeMap(result => {
+        return createUpChunkObservable(uuid$1, result.upload.url, file).pipe(
+        // eslint-disable-next-line no-warning-comments
+        // @TODO type the observable events
+        // eslint-disable-next-line max-nested-callbacks
+        mergeMap(event => {
+          if (event.type !== "success") {
+            return of(event);
+          }
+          return from(updateAssetDocumentFromUpload(client, uuid$1, sanityEvent)).pipe(
+          // eslint-disable-next-line max-nested-callbacks
+          mergeMap(doc => {
+            return of({
+              ...event,
+              asset: doc
+            });
+          }));
+        }),
+        // eslint-disable-next-line max-nested-callbacks
+        catchError(err => {
+          return cancelUpload(client, uuid$1).pipe(mergeMapTo(throwError(err)));
+        }));
+      })));
+    })));
+  }));
+}
 var __freeze$8 = Object.freeze;
 var __defProp$9 = Object.defineProperty;
 var __template$8 = (cooked, raw) => __freeze$8(__defProp$9(cooked, "raw", {
@@ -12267,8 +12544,24 @@ const uploadsAssetStartEpic = (action$, _state$, _ref86) => {
     // delay(500000), // debug uploads
     mergeMap(() => uploadAsset$(client, uploadItem.assetType, file, uploadItem.hash)), takeUntil(action$.pipe(filter(uploadsActions.uploadCancel.match), filter(v => v.payload.hash === uploadItem.hash))), mergeMap(event => {
       if ((event == null ? void 0 : event.type) === "complete") {
-        return of(UPLOADS_ACTIONS.uploadComplete({
-          asset: event.asset
+        return uploadFileToMux({
+          // eslint-disable-next-line camelcase
+          mp4_support: "standard",
+          tool: false
+        },
+        //@ts-expect-error
+        client, file, {
+          enableSignedUrls: true
+        }, event).pipe(mergeMap(result => {
+          if ((result == null ? void 0 : result.type) === "success") {
+            return of(UPLOADS_ACTIONS.uploadComplete({
+              asset: event.asset
+            }));
+          }
+          return empty();
+        }), catchError(error => {
+          console.error("UploadFile error:", error);
+          return empty();
         }));
       }
       if ((event == null ? void 0 : event.type) === "progress" && (event == null ? void 0 : event.stage) === "upload") {
@@ -12665,7 +12958,6 @@ const TableHeader = () => {
       zIndex: 1
       // force stacking context
     },
-
     children: [onSelect ? /* @__PURE__ */jsx(TableHeaderItem, {}) : /* @__PURE__ */jsx(ContextActionContainer$1, {
       align: "center",
       justify: "center",
@@ -13559,7 +13851,6 @@ class ReduxProvider extends Component {
         // inject sanity client as a dependency to all epics
       }
     });
-
     this.store = configureStore({
       reducer: rootReducer,
       middleware: getDefaultMiddleware => getDefaultMiddleware({
@@ -14444,16 +14735,102 @@ const CollaborationsPanel = () => {
     })
   });
 };
+const muxSecretsDocumentId = "secrets.mux";
+const path = ["token", "secretKey", "enableSignedUrls", "signingKeyId", "signingKeyPrivate"];
+const useSecretsDocumentValues = () => {
+  const {
+    error,
+    isLoading,
+    value
+  } = useDocumentValues(muxSecretsDocumentId, path);
+  const cache = useMemo(() => {
+    const exists = Boolean(value);
+    const secrets = {
+      token: (value == null ? void 0 : value.token) || null,
+      secretKey: (value == null ? void 0 : value.secretKey) || null,
+      enableSignedUrls: (value == null ? void 0 : value.enableSignedUrls) || false,
+      signingKeyId: (value == null ? void 0 : value.signingKeyId) || null,
+      signingKeyPrivate: (value == null ? void 0 : value.signingKeyPrivate) || null
+    };
+    return {
+      isInitialSetup: !exists,
+      needsSetup: !(secrets == null ? void 0 : secrets.token) || !(secrets == null ? void 0 : secrets.secretKey),
+      secrets
+    };
+  }, [value]);
+  return {
+    error,
+    isLoading,
+    value: cache
+  };
+};
+const useSaveSecrets = (client, secrets) => {
+  const {
+    isLoading,
+    value
+  } = useSecretsDocumentValues();
+  const saveTokens = async _ref101 => {
+    let {
+      token,
+      secretKey,
+      enableSignedUrls
+    } = _ref101;
+    if (!secrets) return;
+    let {
+      signingKeyId,
+      signingKeyPrivate
+    } = secrets;
+    try {
+      await saveSecrets(client, token, secretKey, enableSignedUrls, signingKeyId, signingKeyPrivate);
+      const valid = await testSecrets(client);
+      if (!(valid == null ? void 0 : valid.status) && token && secretKey) {
+        throw new Error("Invalid secrets");
+      }
+    } catch (err) {
+      console.error("Error while trying to save secrets:", err);
+      throw err;
+    }
+    if (enableSignedUrls) {
+      const hasValidSigningKeys = await haveValidSigningKeys(client, signingKeyId, signingKeyPrivate);
+      if (!hasValidSigningKeys) {
+        try {
+          const {
+            data
+          } = await createSigningKeys(client);
+          signingKeyId = data.id;
+          signingKeyPrivate = data.private_key;
+          await saveSecrets(client, token, secretKey, enableSignedUrls, signingKeyId, signingKeyPrivate);
+        } catch (err) {
+          console.log("Error while creating and saving signing key:", err == null ? void 0 : err.message);
+          throw err;
+        }
+      }
+    }
+    return {
+      token,
+      secretKey,
+      enableSignedUrls,
+      signingKeyId,
+      signingKeyPrivate
+    };
+  };
+  useEffect(() => {
+    if (!(value == null ? void 0 : value.needsSetup) || isLoading) {
+      return;
+    }
+    saveTokens(secrets);
+  }, [saveTokens, value == null ? void 0 : value.needsSetup, value.secrets.enableSignedUrls, value.secrets.secretKey, value.secrets.token, isLoading]);
+};
 var __freeze = Object.freeze;
 var __defProp = Object.defineProperty;
 var __template = (cooked, raw) => __freeze(__defProp(cooked, "raw", {
   value: __freeze(raw || cooked.slice())
 }));
 var _a, _b;
-const BrowserContent = _ref101 => {
+const BrowserContent = _ref102 => {
   let {
     onClose
-  } = _ref101;
+  } = _ref102;
   const client = useVersionedClient();
   const [portalElement, setPortalElement] = useState(null);
   const dispatch = useDispatch();
@@ -14545,10 +14922,18 @@ const BrowserContent = _ref101 => {
   });
 };
 const Browser = props => {
-  const client = useVersionedClient();
+  var _a2, _b2;
   const {
     scheme
   } = useColorScheme();
+  const client = useClient();
+  useSaveSecrets(client, {
+    token: (_a2 = process.env.SANITY_STUDIO_MUX_TOKEN) != null ? _a2 : "",
+    signingKeyPrivate: null,
+    enableSignedUrls: true,
+    signingKeyId: null,
+    secretKey: (_b2 = process.env.SANITY_STUDIO_MUX_TOKEN_SECRET) != null ? _b2 : ""
+  });
   return /* @__PURE__ */jsx(ReduxProvider, {
     assetType: props == null ? void 0 : props.assetType,
     client,

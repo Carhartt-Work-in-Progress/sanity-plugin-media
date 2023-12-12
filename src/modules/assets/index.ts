@@ -15,7 +15,7 @@ import groq from 'groq'
 import {nanoid} from 'nanoid'
 import {Selector} from 'react-redux'
 import {ofType} from 'redux-observable'
-import {empty, from, of} from 'rxjs'
+import {empty, forkJoin, from, of} from 'rxjs'
 import {
   bufferTime,
   catchError,
@@ -34,6 +34,7 @@ import {searchActions} from '../search'
 import type {RootReducerState} from '../types'
 import {UPLOADS_ACTIONS} from '../uploads/actions'
 import {ASSETS_ACTIONS} from './actions'
+
 type ItemError = {
   description: string
   id: string
@@ -250,6 +251,15 @@ const assetsSlice = createSlice({
               opt {
                 media
               },
+              muxData{
+                assetId,
+                playbackId,
+                uploadId,
+                data {
+                  aspect_ratio,
+                  max_resolution_tier,
+                },
+              },
               originalFilename,
               size,
               title,
@@ -409,8 +419,11 @@ export const assetsDeleteEpic: MyEpic = (action$, _state$, {client}) =>
     filter(assetsActions.deleteRequest.match),
     mergeMap(action => {
       const {assets} = action.payload
+      const {dataset} = client.config()
       const assetIds = assets.map(asset => asset._id)
-      return of(assets).pipe(
+      const muxIds = assets.map(asset => asset?.muxData?.assetId).filter(Boolean)
+
+      const sanityDeleteByIds = of(assets).pipe(
         mergeMap(() =>
           client.observable.delete({
             query: groq`*[_id in ${JSON.stringify(assetIds)}]`
@@ -420,6 +433,24 @@ export const assetsDeleteEpic: MyEpic = (action$, _state$, {client}) =>
         catchError((error: ClientError) => {
           return of(assetsActions.deleteError({assetIds, error}))
         })
+      )
+
+      const deleteByMuxId$ = from(muxIds).pipe(
+        mergeMap(muxId =>
+          of(
+            client.request<void>({
+              url: `/addons/mux/assets/${dataset}/${muxId}`,
+              withCredentials: true,
+              method: 'DELETE'
+            })
+          ).pipe(
+            catchError((error: ClientError) => of(assetsActions.deleteError({assetIds, error})))
+          )
+        )
+      )
+      return forkJoin([sanityDeleteByIds, deleteByMuxId$]).pipe(
+        mergeMap(() => of(assetsActions.deleteComplete({assetIds}))),
+        catchError((error: ClientError) => of(assetsActions.deleteError({assetIds, error})))
       )
     })
   )

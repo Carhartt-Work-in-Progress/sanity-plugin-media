@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import type {AssetSource} from 'sanity'
 import {Plugin as Plugin_2} from 'sanity'
 

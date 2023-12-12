@@ -11,6 +11,7 @@ import {hashFile$, uploadAsset$} from '../../utils/uploadSanityAsset'
 import {assetsActions} from '../assets'
 import type {RootReducerState} from '../types'
 import {UPLOADS_ACTIONS} from './actions'
+import {uploadFileToMux} from '../mux/uploadToMux'
 
 export type UploadsReducerState = {
   allIds: string[]
@@ -143,11 +144,40 @@ export const uploadsAssetStartEpic: MyEpic = (action$, _state$, {client}) =>
           ),
           mergeMap(event => {
             if (event?.type === 'complete') {
-              return of(
-                UPLOADS_ACTIONS.uploadComplete({
-                  asset: event.asset
+              return uploadFileToMux(
+                {
+                  // eslint-disable-next-line camelcase
+                  mp4_support: 'standard',
+                  tool: false
+                },
+                //@ts-expect-error
+                client,
+                file,
+                {enableSignedUrls: true},
+                event
+              ).pipe(
+                mergeMap(result => {
+                  // Process the result if needed
+                  if (result?.type === 'success') {
+                    return of(
+                      UPLOADS_ACTIONS.uploadComplete({
+                        asset: event.asset
+                      })
+                    )
+                  }
+                  // Return relevant actions or empty() if not needed
+                  return empty()
+                }),
+                catchError(error => {
+                  // Handle the error if needed
+                  console.error('UploadFile error:', error)
+
+                  // Return relevant error actions or empty() if not needed
+                  return empty()
                 })
               )
+
+              ///
             }
             if (event?.type === 'progress' && event?.stage === 'upload') {
               return of(
@@ -158,6 +188,11 @@ export const uploadsAssetStartEpic: MyEpic = (action$, _state$, {client}) =>
               )
             }
             return empty()
+            // return of(
+            //   UPLOADS_ACTIONS.uploadComplete({
+            //     asset: event.asset
+            //   })
+            // )
           }),
           catchError((error: ClientError) =>
             of(

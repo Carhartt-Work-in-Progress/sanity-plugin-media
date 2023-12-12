@@ -1,10 +1,16 @@
+/* eslint-disable no-undef */
 import type {MutationEvent} from '@sanity/client'
 import {Card, Flex, PortalProvider, studioTheme, ThemeProvider, ToastProvider} from '@sanity/ui'
 import {Asset, Tag} from '@types'
 import groq from 'groq'
 import React, {useEffect, useState} from 'react'
 import {useDispatch} from 'react-redux'
-import {useColorScheme, type AssetSourceComponentProps, type SanityDocument} from 'sanity'
+import {
+  useColorScheme,
+  type AssetSourceComponentProps,
+  type SanityDocument,
+  useClient
+} from 'sanity'
 import {TAG_DOCUMENT_NAME} from '../../constants'
 import {AssetBrowserDispatchProvider} from '../../contexts/AssetSourceDispatchContext'
 import useVersionedClient from '../../hooks/useVersionedClient'
@@ -24,6 +30,7 @@ import {seasonActions} from '../../modules/seasons'
 import {collaborationActions} from '../../modules/collaborations'
 import SeasonsPanel from '../SeasonsPanel'
 import CollaborationsPanel from '../CollaborationPanel'
+import {useSaveSecrets} from '../../modules/mux/useSaveSecrets'
 
 type Props = {
   assetType?: AssetSourceComponentProps['assetType']
@@ -137,12 +144,22 @@ const BrowserContent = ({onClose}: {onClose?: AssetSourceComponentProps['onClose
 }
 
 const Browser = (props: Props) => {
-  const client = useVersionedClient()
+  // const client = useVersionedClient()
   const {scheme} = useColorScheme()
+  //MUX SECRETS SETUP
+  const client = useClient()
 
+  useSaveSecrets(client, {
+    token: process.env.SANITY_STUDIO_MUX_TOKEN ?? '',
+    signingKeyPrivate: null,
+    enableSignedUrls: true,
+    signingKeyId: null,
+    secretKey: process.env.SANITY_STUDIO_MUX_TOKEN_SECRET ?? ''
+  })
   return (
     <ReduxProvider
       assetType={props?.assetType}
+      // @ts-expect-error
       client={client}
       document={props?.document}
       selectedAssets={props?.selectedAssets}

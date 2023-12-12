@@ -108,7 +108,6 @@ const DialogAssetEdit = (props: Props) => {
     resolver: zodResolver(assetFormSchema)
   })
 
-  console.log(errors, isValid, 'validation errors')
   const currentValues = getValues()
 
   const formUpdating = !assetItem || assetItem?.updating
@@ -208,6 +207,7 @@ const DialogAssetEdit = (props: Props) => {
             opt: {
               media: {
                 ...sanitizedFormData.opt.media,
+                title: sanitizedFormData?.title ?? sanitizeFormData?.name ?? '',
                 tags:
                   sanitizedFormData.opt.media.tags?.map((tag: TagSelectOption) => ({
                     _ref: tag.value,
