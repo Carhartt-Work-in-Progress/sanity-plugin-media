@@ -146,7 +146,7 @@ export function uploadFileToMux(
             const {enableSignedUrls} = options
             const body = {
               mp4_support: config.mp4_support,
-              playback_policy: [enableSignedUrls ? 'signed' : 'public']
+              playback_policy: [enableSignedUrls ? 'public' : 'public']
             }
 
             return concat(
