@@ -5,7 +5,8 @@ export default {
   title: 'Media Tag',
   icon: TagIcon,
   name: TAG_DOCUMENT_NAME,
-  type: 'document',
+  type: 'object',
+  hidden: true,
   fields: [
     {
       title: 'Name',

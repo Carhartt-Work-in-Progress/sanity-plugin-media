@@ -7,10 +7,25 @@ import type {
 } from '@sanity/client'
 import type {Epic} from 'redux-observable'
 import * as z from 'zod'
-import {assetFormSchema, tagFormSchema, tagOptionSchema} from '../formSchema'
+import {assetFormSchema, generalOptionSchema, tagFormSchema, tagOptionSchema} from '../formSchema'
 import {RootReducerState} from '../modules/types'
 
 type CustomFields = {
+  altText?: string
+  description?: string
+  opt?: {
+    media?: {
+      tags?: SanityReference[]
+    }
+  }
+  title?: string
+}
+
+type ImageCustomFields = {
+  name: string
+  season: string
+  collaboration?: string
+  products: string[]
   altText?: string
   description?: string
   opt?: {
@@ -71,8 +86,14 @@ export type Dialog =
   | DialogConfirmProps
   | DialogSearchFacetsProps
   | DialogTagCreateProps
+  | DialogSeasonCreateProps
+  | DialogCollaborationCreateProps
   | DialogTagEditProps
   | DialogTagsProps
+  | DialogMassAssetEditProps
+  | DialogSeasonsProps
+  | DialogSeasonEditProps
+  | DialogCollaborationEditProps
 
 export type DialogAction = 'deleteAsset' | 'deleteTag'
 
@@ -86,6 +107,17 @@ export type DialogAssetEditProps = {
   }
   lastRemovedTagIds?: string[]
   type: 'assetEdit'
+}
+export type DialogMassAssetEditProps = {
+  assetId?: string
+  closeDialogId?: string
+  id: string
+  lastCreatedTag?: {
+    label: string
+    value: string
+  }
+  lastRemovedTagIds?: string[]
+  type: 'massEdit'
 }
 
 export type DialogConfirmProps = {
@@ -112,10 +144,28 @@ export type DialogTagsProps = {
   type: 'tags'
 }
 
+export type DialogSeasonsProps = {
+  closeDialogId?: string
+  id: string
+  type: 'seasons'
+}
+
 export type DialogTagCreateProps = {
   closeDialogId?: string
   id: string
   type: 'tagCreate'
+}
+
+export type DialogSeasonCreateProps = {
+  closeDialogId?: string
+  id: string
+  type: 'seasonCreate'
+}
+
+export type DialogCollaborationCreateProps = {
+  closeDialogId?: string
+  id: string
+  type: 'collaborationCreate'
 }
 
 export type DialogTagEditProps = {
@@ -123,6 +173,20 @@ export type DialogTagEditProps = {
   id: string
   tagId?: string
   type: 'tagEdit'
+}
+
+export type DialogSeasonEditProps = {
+  closeDialogId?: string
+  id: string
+  seasonId?: string
+  type: 'seasonEdit'
+}
+
+export type DialogCollaborationEditProps = {
+  closeDialogId?: string
+  id: string
+  collaborationId?: string
+  type: 'collaborationEdit'
 }
 
 export type Document = {
@@ -146,7 +210,7 @@ export type FileAsset = SanityAssetDocument &
   }
 
 export type ImageAsset = SanityImageAssetDocument &
-  CustomFields & {
+  ImageCustomFields & {
     _type: 'sanity.imageAsset'
   }
 
@@ -246,6 +310,7 @@ export type SearchFacetName =
   | 'title'
   | 'type'
   | 'width'
+  | 'season'
 
 export type SearchFacetOperatorType =
   | 'doesNotInclude'
@@ -310,6 +375,8 @@ export type Tag = SanityDocument & {
 }
 
 export type TagActions = 'applyAll' | 'delete' | 'edit' | 'removeAll' | 'search'
+export type SeasonActions = 'applyAll' | 'delete' | 'edit' | 'removeAll' | 'search'
+export type CollaborationActions = 'applyAll' | 'delete' | 'edit' | 'removeAll' | 'search'
 
 export type TagFormData = z.infer<typeof tagFormSchema>
 
@@ -322,6 +389,8 @@ export type TagItem = {
 }
 
 export type TagSelectOption = z.infer<typeof tagOptionSchema>
+
+export type SeasonSelectOption = z.infer<typeof generalOptionSchema>
 
 export type UploadItem = {
   _type: 'upload'

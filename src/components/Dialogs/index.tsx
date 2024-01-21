@@ -7,6 +7,11 @@ import DialogSearchFacets from '../DialogSearchFacets'
 import DialogTagCreate from '../DialogTagCreate'
 import DialogTagEdit from '../DialogTagEdit'
 import DialogTags from '../DialogTags'
+import DialogMassAssetEdit from '../DialogMassAssetEdit'
+import DialogSeasonEdit from '../DialogSeasonEdit'
+import DialogSeasonCreate from '../DialogSeasonCreate'
+import DialogCollaborationEdit from '../DialogCollaborationEdit'
+import DialogCollaborationCreate from '../DialogCollaborationCreate'
 
 const Dialogs = () => {
   // Redux
@@ -25,6 +30,14 @@ const Dialogs = () => {
         <DialogAssetEdit dialog={dialog} key={index}>
           {childDialogs}
         </DialogAssetEdit>
+      )
+    }
+
+    if (dialog.type === 'massEdit') {
+      return (
+        <DialogMassAssetEdit dialog={dialog} key={index}>
+          {childDialogs}
+        </DialogMassAssetEdit>
       )
     }
 
@@ -52,11 +65,42 @@ const Dialogs = () => {
       )
     }
 
+    if (dialog.type === 'seasonCreate') {
+      return (
+        <DialogSeasonCreate dialog={dialog} key={index}>
+          {childDialogs}
+        </DialogSeasonCreate>
+      )
+    }
+
+    if (dialog.type === 'collaborationCreate') {
+      return (
+        <DialogCollaborationCreate dialog={dialog} key={index}>
+          {childDialogs}
+        </DialogCollaborationCreate>
+      )
+    }
+
     if (dialog.type === 'tagEdit') {
       return (
         <DialogTagEdit dialog={dialog} key={index}>
           {childDialogs}
         </DialogTagEdit>
+      )
+    }
+
+    if (dialog.type === 'seasonEdit') {
+      return (
+        <DialogSeasonEdit dialog={dialog} key={index}>
+          {childDialogs}
+        </DialogSeasonEdit>
+      )
+    }
+    if (dialog.type === 'collaborationEdit') {
+      return (
+        <DialogCollaborationEdit dialog={dialog} key={index}>
+          {childDialogs}
+        </DialogCollaborationEdit>
       )
     }
 

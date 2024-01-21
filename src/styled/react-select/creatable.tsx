@@ -45,13 +45,18 @@ export const reactSelectStyles = (scheme: ThemeColorSchemeKey): StylesConfig => 
       marginLeft: rem(themeSpace[2])
     }),
     menuList: styles => ({
-      ...styles
+      ...styles,
+      position: 'relative'
     }),
     multiValue: (styles, {isDisabled}) => ({
       ...styles,
       backgroundColor: getSchemeColor(scheme, 'mutedHoveredBg'),
       borderRadius: themeRadius[2],
       opacity: isDisabled ? 0.5 : 1
+    }),
+    singleValue: styles => ({
+      ...styles,
+      color: getSchemeColor(scheme, 'text')
     }),
     multiValueLabel: () => ({
       color: getSchemeColor(scheme, 'mutedHoveredFg'),
@@ -74,6 +79,7 @@ export const reactSelectStyles = (scheme: ThemeColorSchemeKey): StylesConfig => 
     }),
     option: (styles, {isFocused}) => ({
       ...styles,
+      zIndex: 13,
       backgroundColor: isFocused ? getSchemeColor(scheme, 'spotBlue') : 'transparent',
       borderRadius: themeRadius[2],
       color: isFocused ? getSchemeColor(scheme, 'bg') : 'inherit',

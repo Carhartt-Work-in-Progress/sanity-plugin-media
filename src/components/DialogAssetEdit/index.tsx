@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {zodResolver} from '@hookform/resolvers/zod'
 import type {MutationEvent} from '@sanity/client'
 import {Box, Button, Card, Flex, Stack, Tab, TabList, TabPanel, Text} from '@sanity/ui'
@@ -27,6 +28,17 @@ import FormFieldInputText from '../FormFieldInputText'
 import FormFieldInputTextarea from '../FormFieldInputTextarea'
 import FormSubmitButton from '../FormSubmitButton'
 import Image from '../Image'
+import FormFieldInputSeasons from '../FormFieldInputSeasons'
+import ProductSelector from '../ProductsSelector'
+import getSeasonSelectOptions from '../../utils/getSeasonSelectOptions'
+import {seasonActions, selectInitialSelectedSeasons, selectSeasons} from '../../modules/seasons'
+import FormFieldInputCollaborations from '../FormFieldInputCollaborations'
+import {
+  collaborationActions,
+  selectCollaborations,
+  selectInitialSelectedCollaboration
+} from '../../modules/collaborations'
+import getSeasonCollaborationOptions from '../../utils/getCollaborationSelectOptions'
 
 type Props = {
   children: ReactNode
@@ -47,24 +59,33 @@ const DialogAssetEdit = (props: Props) => {
   const dispatch = useDispatch()
   const assetItem = useTypedSelector(state => selectAssetById(state, String(assetId))) // TODO: check casting
   const tags = useTypedSelector(selectTags)
+  const seasons = useTypedSelector(selectSeasons)
+  const collaboration = useTypedSelector(selectCollaborations)
 
   const assetUpdatedPrev = useRef<string | undefined>(undefined)
 
   // Generate a snapshot of the current asset
   const [assetSnapshot, setAssetSnapshot] = useState(assetItem?.asset)
   const [tabSection, setTabSection] = useState<'details' | 'references'>('details')
-
   const currentAsset = assetItem ? assetItem?.asset : assetSnapshot
-  const allTagOptions = getTagSelectOptions(tags)
 
+  const allTagOptions = getTagSelectOptions(tags)
+  const allSeasonOptions = getSeasonSelectOptions(seasons)
+  const allCollaborationOptions = getSeasonCollaborationOptions(collaboration)
+  const initialCollaboration = useTypedSelector(selectInitialSelectedCollaboration(currentAsset))
+  const initialSeason = useTypedSelector(selectInitialSelectedSeasons(currentAsset))
   const assetTagOptions = useTypedSelector(selectTagSelectOptions(currentAsset))
 
   const generateDefaultValues = useCallback(
     (asset?: Asset): AssetFormData => {
       return {
+        name: asset?.name || asset?.originalFilename || '',
+        primaryProducts: asset?.primaryProducts || asset?.products || [],
+        secondaryProducts: asset?.secondaryProducts || asset?.products || [],
+        season: initialSeason || null,
+        collaboration: initialCollaboration || null,
         altText: asset?.altText || '',
         description: asset?.description || '',
-        originalFilename: asset?.originalFilename || '',
         opt: {media: {tags: assetTagOptions}},
         title: asset?.title || ''
       }
@@ -75,7 +96,7 @@ const DialogAssetEdit = (props: Props) => {
   const {
     control,
     // Read the formState before render to subscribe the form state through Proxy
-    formState: {errors, isDirty, isValid},
+    formState: {errors, isValid},
     getValues,
     handleSubmit,
     register,
@@ -86,6 +107,8 @@ const DialogAssetEdit = (props: Props) => {
     mode: 'onChange',
     resolver: zodResolver(assetFormSchema)
   })
+
+  const currentValues = getValues()
 
   const formUpdating = !assetItem || assetItem?.updating
 
@@ -127,13 +150,37 @@ const DialogAssetEdit = (props: Props) => {
     [currentAsset?._id, dispatch]
   )
 
+  const handleCreateSeason = useCallback(
+    (seasonName: string) => {
+      // Dispatch action to create new tag
+      dispatch(
+        seasonActions.createRequest({
+          name: seasonName
+        })
+      )
+    },
+    [dispatch]
+  )
+
+  const handleCreateCollaboration = useCallback(
+    (collaborationName: string) => {
+      // Dispatch action to create new tag
+      dispatch(
+        collaborationActions.createRequest({
+          name: collaborationName,
+          assetId: currentAsset?._id
+        })
+      )
+    },
+    [dispatch]
+  )
+
   // Submit react-hook-form
   const onSubmit: SubmitHandler<AssetFormData> = useCallback(
     formData => {
       if (!assetItem?.asset) {
         return
       }
-
       const sanitizedFormData = sanitizeFormData(formData)
 
       dispatch(
@@ -142,10 +189,25 @@ const DialogAssetEdit = (props: Props) => {
           closeDialogId: assetItem?.asset._id,
           formData: {
             ...sanitizedFormData,
+            collaboration: sanitizedFormData?.collaboration?.value
+              ? {
+                  _ref: sanitizedFormData.collaboration.value,
+                  _type: 'reference',
+                  _weak: true
+                }
+              : null,
+            season: sanitizedFormData?.season?.value
+              ? {
+                  _ref: sanitizedFormData.season.value,
+                  _type: 'reference',
+                  _weak: true
+                }
+              : null,
             // Map tags to sanity references
             opt: {
               media: {
                 ...sanitizedFormData.opt.media,
+                title: sanitizedFormData?.title ?? sanitizeFormData?.name ?? '',
                 tags:
                   sanitizedFormData.opt.media.tags?.map((tag: TagSelectOption) => ({
                     _ref: tag.value,
@@ -221,7 +283,7 @@ const DialogAssetEdit = (props: Props) => {
 
         {/* Submit button */}
         <FormSubmitButton
-          disabled={formUpdating || !isDirty || !isValid}
+          disabled={formUpdating || !isValid}
           isValid={isValid}
           lastUpdated={currentAsset?._updatedAt}
           onClick={handleSubmit(onSubmit)}
@@ -293,6 +355,25 @@ const DialogAssetEdit = (props: Props) => {
                       id="details-panel"
                     >
                       <Stack space={3}>
+                        {/* Title */}
+                        <FormFieldInputText
+                          {...register('title')}
+                          disabled={formUpdating}
+                          error={errors?.title?.message}
+                          label="Title"
+                          name="title"
+                          value={currentAsset?.title}
+                        />
+                        {/* Description */}
+                        <FormFieldInputTextarea
+                          {...register('description')}
+                          disabled={formUpdating}
+                          error={errors?.description?.message}
+                          label="Description"
+                          name="description"
+                          rows={5}
+                          value={currentAsset?.description}
+                        />
                         {/* Tags */}
                         <FormFieldInputTags
                           control={control}
@@ -305,23 +386,63 @@ const DialogAssetEdit = (props: Props) => {
                           placeholder="Select or create..."
                           value={assetTagOptions}
                         />
-                        {/* Filename */}
-                        <FormFieldInputText
-                          {...register('originalFilename')}
+                        {/* Seasons */}
+                        <FormFieldInputSeasons
+                          control={control}
                           disabled={formUpdating}
-                          error={errors?.originalFilename?.message}
-                          label="Filename"
-                          name="originalFilename"
-                          value={currentAsset?.originalFilename}
+                          error={errors?.season?.message}
+                          label="Seasons"
+                          name="season"
+                          onCreateSeason={handleCreateSeason}
+                          options={allSeasonOptions}
+                          placeholder="Select or create..."
+                          value={currentValues?.season ?? null}
                         />
-                        {/* Title */}
-                        <FormFieldInputText
-                          {...register('title')}
+
+                        {/* name */}
+                        {/* <FormFieldInputText
+                          {...register('name')}
                           disabled={formUpdating}
-                          error={errors?.title?.message}
-                          label="Title"
-                          name="title"
-                          value={currentAsset?.title}
+                          error={errors?.name?.message}
+                          label="name"
+                          name="name"
+                          value={currentAsset?.name}
+                        /> */}
+
+                        {/* Collaborations */}
+                        <FormFieldInputCollaborations
+                          control={control}
+                          disabled={formUpdating}
+                          error={errors?.season?.message}
+                          label="Drops"
+                          name="collaboration"
+                          onCreateSeason={handleCreateCollaboration}
+                          options={allCollaborationOptions}
+                          placeholder="Select or create..."
+                          value={currentValues?.collaboration ?? null}
+                        />
+
+                        {/* products */}
+                        <ProductSelector
+                          onChange={updatedValue => {
+                            setValue('primaryProducts', updatedValue, {shouldDirty: true})
+                          }}
+                          error={errors.products?.message?.toString()}
+                          value={currentValues?.primaryProducts ?? []}
+                          labelDescription="Add products to image"
+                          label="Primary Products"
+                          name="primaryProducts"
+                        />
+
+                        <ProductSelector
+                          onChange={updatedValue => {
+                            setValue('secondaryProducts', updatedValue, {shouldDirty: true})
+                          }}
+                          error={errors.products?.message?.toString()}
+                          value={currentValues?.secondaryProducts ?? []}
+                          labelDescription="Add products to image"
+                          label="Secondary Products"
+                          name="secondaryProducts"
                         />
                         {/* Alt text */}
                         <FormFieldInputText
@@ -331,16 +452,6 @@ const DialogAssetEdit = (props: Props) => {
                           label="Alt Text"
                           name="altText"
                           value={currentAsset?.altText}
-                        />
-                        {/* Description */}
-                        <FormFieldInputTextarea
-                          {...register('description')}
-                          disabled={formUpdating}
-                          error={errors?.description?.message}
-                          label="Description"
-                          name="description"
-                          rows={5}
-                          value={currentAsset?.description}
                         />
                       </Stack>
                     </TabPanel>

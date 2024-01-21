@@ -1,5 +1,5 @@
 {
-  "name": "sanity-plugin-media",
+  "name": "sanity-plugin-media-carhartt",
   "version": "2.2.4",
   "description": "This version of `sanity-plugin-media` is for Sanity Studio V3.",
   "keywords": [
@@ -58,7 +58,9 @@
     "watch": "pkg-utils watch --strict"
   },
   "dependencies": {
+    "@commercetools/platform-sdk": "^6.0.0",
     "@hookform/resolvers": "^3.1.1",
+    "@mux/upchunk": "^3.3.0",
     "@reduxjs/toolkit": "^1.9.0",
     "@sanity/incompatible-plugin": "^1.0.4",
     "@sanity/ui": "^1.7.0",
@@ -69,6 +71,7 @@
     "filesize": "^9.0.0",
     "groq": "^3.0.0",
     "is-hotkey": "^0.2.0",
+    "jsonwebtoken-esm": "^2.0.1",
     "nanoid": "^3.3.3",
     "npm-run-all": "^4.1.5",
     "pluralize": "^8.0.0",
@@ -81,6 +84,7 @@
     "redux": "^4.2.0",
     "redux-observable": "^2.0.0",
     "rxjs": "^7.0.0",
+    "usehooks-ts": "^2.9.1",
     "zod": "^3.21.4"
   },
   "devDependencies": {

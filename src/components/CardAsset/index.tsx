@@ -51,7 +51,7 @@ const CardContainer = styled(Flex)<{picked?: boolean; theme: Theme; updating?: b
       width: 100%;
 
       border: ${picked
-        ? `1px solid ${theme.sanity.color.spot.orange} !important`
+        ? `1px solid ${theme?.sanity?.color?.spot?.orange ?? 'orange'} !important`
         : '1px solid inherit'};
 
       ${!updating &&
@@ -244,8 +244,8 @@ const CardAsset = (props: Props) => {
           )}
 
           <Box marginLeft={2}>
-            <Text muted size={0} textOverflow="ellipsis">
-              {asset.originalFilename}
+            <Text muted style={{textTransform: 'capitalize'}} size={0} textOverflow="ellipsis">
+              {asset?.title ?? asset.originalFilename}
             </Text>
           </Box>
         </ContextActionContainer>

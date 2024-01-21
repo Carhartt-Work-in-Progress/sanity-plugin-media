@@ -21,6 +21,10 @@ const PickedBar = () => {
     dispatch(assetsActions.pickClear())
   }
 
+  const handleMassEdit = () => {
+    dispatch(dialogActions.showMassAssetEdit())
+  }
+
   const handleDeletePicked = () => {
     dispatch(dialogActions.showConfirmDeleteAssets({assets: assetsPicked}))
   }
@@ -47,6 +51,17 @@ const PickedBar = () => {
             {assetsPicked.length} {pluralize('asset', assetsPicked.length)} selected
           </Label>
         </Box>
+
+        {/* Mass Edit button */}
+        <Button
+          mode="bleed"
+          onClick={handleMassEdit}
+          padding={2}
+          style={{background: 'none', boxShadow: 'none'}}
+          tone="default"
+        >
+          <Label size={0}>Edit</Label>
+        </Button>
 
         {/* Deselect button */}
         <Button

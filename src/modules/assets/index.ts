@@ -15,7 +15,7 @@ import groq from 'groq'
 import {nanoid} from 'nanoid'
 import {Selector} from 'react-redux'
 import {ofType} from 'redux-observable'
-import {empty, from, of} from 'rxjs'
+import {empty, forkJoin, from, of} from 'rxjs'
 import {
   bufferTime,
   catchError,
@@ -25,6 +25,7 @@ import {
   switchMap,
   withLatestFrom
 } from 'rxjs/operators'
+import {merge} from 'rxjs'
 import {getOrderTitle} from '../../config/orders'
 import {ORDER_OPTIONS} from '../../constants'
 import debugThrottle from '../../operators/debugThrottle'
@@ -33,6 +34,7 @@ import {searchActions} from '../search'
 import type {RootReducerState} from '../types'
 import {UPLOADS_ACTIONS} from '../uploads/actions'
 import {ASSETS_ACTIONS} from './actions'
+
 type ItemError = {
   description: string
   id: string
@@ -74,7 +76,7 @@ const defaultOrder = ORDER_OPTIONS[0] as {
 
 export const initialState = {
   allIds: [],
-  assetTypes: [],
+  assetTypes: ['image', 'file'],
   byIds: {},
   fetchCount: -1,
   fetching: false,
@@ -229,7 +231,6 @@ const assetsSlice = createSlice({
         sort?: string
       }) => {
         const pipe = sort || selector ? '|' : ''
-
         // Construct query
         const query = groq`
           {
@@ -250,9 +251,24 @@ const assetsSlice = createSlice({
               opt {
                 media
               },
+              muxData{
+                assetId,
+                playbackId,
+                uploadId,
+                data {
+                  aspect_ratio,
+                  max_resolution_tier,
+                },
+              },
               originalFilename,
               size,
               title,
+              products,
+              primaryProducts,
+              secondaryProducts,  
+              collaboration, 
+              season,
+              name,
               url
             } ${pipe} ${sort} ${selector},
           }
@@ -377,6 +393,19 @@ const assetsSlice = createSlice({
       const assetId = action.payload?.asset?._id
       state.byIds[assetId].updating = true
     },
+    massUpdateRequest(
+      state,
+      action: PayloadAction<{
+        assets: Asset[]
+        closeDialogId?: string
+        formData: Record<string, any>
+      }>
+    ) {
+      const assetIds = action.payload?.assets?.map(asset => asset._id)
+      for (const assetId of assetIds) {
+        state.byIds[assetId].updating = true
+      }
+    },
     viewSet(state, action: PayloadAction<{view: BrowserView}>) {
       state.view = action.payload?.view
     }
@@ -390,8 +419,11 @@ export const assetsDeleteEpic: MyEpic = (action$, _state$, {client}) =>
     filter(assetsActions.deleteRequest.match),
     mergeMap(action => {
       const {assets} = action.payload
+      const {dataset} = client.config()
       const assetIds = assets.map(asset => asset._id)
-      return of(assets).pipe(
+      const muxIds = assets.map(asset => asset?.muxData?.assetId).filter(Boolean)
+
+      const sanityDeleteByIds = of(assets).pipe(
         mergeMap(() =>
           client.observable.delete({
             query: groq`*[_id in ${JSON.stringify(assetIds)}]`
@@ -401,6 +433,24 @@ export const assetsDeleteEpic: MyEpic = (action$, _state$, {client}) =>
         catchError((error: ClientError) => {
           return of(assetsActions.deleteError({assetIds, error}))
         })
+      )
+
+      const deleteByMuxId$ = from(muxIds).pipe(
+        mergeMap(muxId =>
+          of(
+            client.request<void>({
+              url: `/addons/mux/assets/${dataset}/${muxId}`,
+              withCredentials: true,
+              method: 'DELETE'
+            })
+          ).pipe(
+            catchError((error: ClientError) => of(assetsActions.deleteError({assetIds, error})))
+          )
+        )
+      )
+      return forkJoin([sanityDeleteByIds, deleteByMuxId$]).pipe(
+        mergeMap(() => of(assetsActions.deleteComplete({assetIds}))),
+        catchError((error: ClientError) => of(assetsActions.deleteError({assetIds, error})))
       )
     })
   )
@@ -744,7 +794,6 @@ export const assetsUpdateEpic: MyEpic = (action$, state$, {client}) =>
     withLatestFrom(state$),
     mergeMap(([action, state]) => {
       const {asset, closeDialogId, formData} = action.payload
-
       return of(action).pipe(
         debugThrottle(state.debug.badConnection),
         mergeMap(() =>
@@ -777,6 +826,53 @@ export const assetsUpdateEpic: MyEpic = (action$, state$, {client}) =>
           )
         )
       )
+    })
+  )
+
+export const assetsMassUpdateEpic: MyEpic = (action$, state$, {client}) =>
+  action$.pipe(
+    filter(assetsActions.massUpdateRequest.match),
+    withLatestFrom(state$),
+    mergeMap(([action]) => {
+      const {assets, formData} = action.payload
+      // Create an observable for each asset and merge them into a single observable
+      const updateObservables = assets.map(asset => {
+        // allow updating single fields without overwriting the rest of the document
+        const formDataWithoutEmptyValues = Object.entries(formData).reduce(
+          (acc, [key, value]) => (value ? {...acc, [key]: value} : acc),
+          {}
+        )
+        return from(
+          client
+            .patch(asset._id)
+            .setIfMissing({opt: {}})
+            .setIfMissing({'opt.media': {}})
+            .set({...formDataWithoutEmptyValues})
+            .commit()
+        ).pipe(
+          mergeMap((updatedAsset: any) =>
+            of(
+              assetsActions.updateComplete({
+                asset: updatedAsset
+              })
+            )
+          ),
+          catchError((error: ClientError) => {
+            return of(
+              assetsActions.updateError({
+                asset,
+                error: {
+                  message: error?.message || 'Internal error',
+                  statusCode: error?.statusCode || 500
+                }
+              })
+            )
+          })
+        )
+      })
+
+      // Merge all the update observables into a single observable
+      return merge(...updateObservables) // Specify the type explicitly here
     })
   )
 

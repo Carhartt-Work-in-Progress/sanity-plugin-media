@@ -21,7 +21,8 @@ import assetsReducer, {
   assetsTagsAddEpic,
   assetsTagsRemoveEpic,
   assetsUnpickEpic,
-  assetsUpdateEpic
+  assetsUpdateEpic,
+  assetsMassUpdateEpic
 } from './assets'
 import debugReducer from './debug'
 import dialogReducer, {
@@ -59,6 +60,19 @@ import uploadsReducer, {
   uploadsCompleteQueueEpic
 } from './uploads'
 
+import seasonsReducer, {
+  seasonsCreateEpic,
+  seasonsDeleteEpic,
+  seasonsFetchEpic,
+  seasonsUpdateEpic
+} from './seasons'
+import collaborationsReducer, {
+  collaborationFetchEpic,
+  collaborationUpdateEpic,
+  collaborationsCreateEpic,
+  collaborationsDeleteEpic
+} from './collaborations'
+
 export const rootEpic = combineEpics(
   assetsDeleteEpic,
   assetsFetchEpic,
@@ -75,6 +89,7 @@ export const rootEpic = combineEpics(
   assetsTagsRemoveEpic,
   assetsUnpickEpic,
   assetsUpdateEpic,
+  assetsMassUpdateEpic,
   dialogClearOnAssetUpdateEpic,
   dialogTagCreateEpic,
   dialogTagDeleteEpic,
@@ -99,11 +114,21 @@ export const rootEpic = combineEpics(
   uploadsAssetStartEpic,
   uploadsAssetUploadEpic,
   uploadsCheckRequestEpic,
-  uploadsCompleteQueueEpic
+  uploadsCompleteQueueEpic,
+  seasonsCreateEpic,
+  seasonsUpdateEpic,
+  seasonsDeleteEpic,
+  seasonsFetchEpic,
+  collaborationFetchEpic,
+  collaborationsCreateEpic,
+  collaborationUpdateEpic,
+  collaborationsDeleteEpic
 )
 
 const reducers = {
   assets: assetsReducer,
+  seasons: seasonsReducer,
+  collaborations: collaborationsReducer,
   debug: debugReducer,
   dialog: dialogReducer,
   notifications: notificationsReducer,
